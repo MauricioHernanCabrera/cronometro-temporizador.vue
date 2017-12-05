@@ -66,29 +66,37 @@ body{
 }
 .contenedor-de-tiempos{
 	width: 100%;
-	font-size: 20px;
-	position: relative;
 	
+	position: relative;
 	&#{-titulo}{
+		font-size: 16px;
+		text-align: center;
 		margin-top: 2px;
 		padding: 10px;
 		background: #EC9A29;
 		color: white;
+		font-weight: 700;
 	}
 	&#{-elemento}{
 		color: white;
 		background: #143642;
 		margin-bottom: 2px;
 		padding: 10px;
-		span{
-			padding-left: 5px;
-			display: inline-block;
-		}
+		display: flex;
+		align-items: center;
 		&#{-indice}{
+			color: white;
 			font-size: 25px;
 			display: inline-block;
 			background: #0F8B8D;
 			padding: 0 4px;
+			border: 0;
+			cursor: pointer;
+		}
+		&#{-item}{
+			padding-left: 10px;
+			display: inline-block;
+			letter-spacing: 1px;
 		}
 	}
 	&#{-contenedor-boton}{
