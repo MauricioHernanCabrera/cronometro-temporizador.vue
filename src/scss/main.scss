@@ -1,116 +1,136 @@
 @import '../../node_modules/bulma/bulma.sass';
-body{
-	background: #FFFFFF;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	font-family: sans-serif, helvetica;
-}
-.contenedor-temporizador{
-	margin-top: 50px;
-	background: #BB6B00;
-	padding: 10px;
-	border-radius: 3px;
-	input{
-		border-radius: 3px;
-	    background: #934B00;
-		color: white;
-		padding: 16px 0px 16px 14px;
-	    text-align: center;
-	    height: 0px;
-	    width: 58px;
-	    font-size: 24px;
-	    border: 0;
-	}
-	span{
-		color: white;
-	    font-size: 24px;
-	    font-weight: 700; 
-	}
-	p{
-		color: black;
-	}
-}
-.contenedor-botones{
-	button{
-		display: inline-block;
-		color: white;
-		padding: 8px;
-		font-size: 16px;
-		font-weight: 700;
-		cursor: pointer;	
-		border: 0;
-	}
 
-	&#{-principales}{
-		margin-top: 2px;
-		button{
-			width: 50%;
-			background: #19535F;
+$verde_claro: #00393b;
+$verde_oscuro: #003133;
+$blanco: #fef7f4;
+$celeste: #31a5bd;
+$rojo: #7b2d26;
+$alto: 100vh;
+body{
+	min-height: $alto;
+	background: $verde_claro;
+
+}
+.contenedor{
+	// width: 684px;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	background: $verde_claro;
+}
+.contenedor-header{
+	padding: 28px 0;
+	.header-app{
+		width: 628px;
+		background: $verde_claro;
+		input{
+			background: $verde_oscuro;
+			color: $blanco;
+			font-size: 70px;
+			width: 135px;
+			height: 100px;
+			border: 0;
+			text-align: center;
+			display: inline-block;
 		}
-		button:nth-child(1){
-			border-radius: 3px 0 0 0;
-		}
-		button:nth-child(2){
-			border-radius: 0 3px 0 0;
-		}
-	}
-	&#{-secundarios}{
-		button{
-			width: 100%;
-			background: #32936F;
-			border-radius: 0 0 3px 3px;
+		span{
+			background: $verde_claro;
+			color: $blanco;
+			font-size: 80px;
+			padding: 0 5.5px;
+			display: inline-block;
 		}
 	}
 }
-.contenedor-de-tiempos{
-	width: 100%;
-	
-	position: relative;
-	&#{-titulo}{
-		font-size: 16px;
-		text-align: center;
-		margin-top: 2px;
-		padding: 10px;
-		background: #EC9A29;
-		color: white;
-		font-weight: 700;
-	}
-	&#{-elemento}{
-		color: white;
-		background: #143642;
-		margin-bottom: 2px;
-		padding: 10px;
-		display: flex;
-		align-items: center;
-		&#{-indice}{
-			color: white;
-			font-size: 25px;
-			display: inline-block;
-			background: #0F8B8D;
-			padding: 0 4px;
-			border: 0;
-			cursor: pointer;
-		}
-		&#{-item}{
-			padding-left: 10px;
-			display: inline-block;
-			letter-spacing: 1px;
-		}
-	}
-	&#{-contenedor-boton}{
-		display: inline-block;
-		position: absolute;
-		right: 0;
-		padding-right: 10px;
+
+.contenedor-botones{
+	padding: 0 0 28px 0;
+	.botones-app{
+		width: 628px;
 		button{
-			border: 0;
-			background: #7B2D26;
-			font-size: 16px;
-			color: white;
 			cursor: pointer;
+			border: 0;
 			display: inline-block;
+			background: none;
+			color: $blanco;
+			height: 63px;
+			font-size: 30px;
+			background: $verde_oscuro;
+			transition: .3s;
 		}
+		button:hover{
+			background: rgba(0, 0, 0, 0.2);
+		}
+		.principales{
+			button{
+				width: 310px;
+			}
+			button:nth-child(1){
+				margin-right: 8px;
+			}
+		}
+		.secundarios{
+			button{
+				margin-top: 8px;
+				width: 628px;
+			}
+		}
+	}
+}
+
+.contenedor-lista-tiempos{
+	padding: 0 0 28px 0;
+	min-height: 369px;
+	.lista-tiempos-app{
+		width: 628px;
+		.item{
+			border-bottom: 4px solid $verde_oscuro;
+			display: flex;
+			align-items: center;
+			padding: 20px;
+			button{
+				display: inline-block;
+				border: 0;
+				color: $blanco;
+				cursor: pointer;
+			}
+			.boton-agregar-principal{
+				width: 108px;
+				height: 71px;
+				font-size: 40px;
+				background: $celeste;
+			}
+			.texto{
+				color: $blanco;
+				font-size: 30px;
+				margin-left: 20px;
+				letter-spacing: 2px;
+			}
+			.efecto-boton{
+				height: 100%;
+				width: 100%;
+				display: inline-block;
+				position: relative;
+				display: flex;
+				align-items: center;
+				.boton-eliminar{
+					position: absolute;
+					right: 0;
+					width: 150px;
+					height: 43px;
+					font-size: 24px;
+					background: $rojo;
+				}
+			}
+		}
+		.item:last-child{
+			border: 0;
+		}
+	}
+}
+.footer-app{
+	
+	a{
+		color: $blanco;
 	}
 }

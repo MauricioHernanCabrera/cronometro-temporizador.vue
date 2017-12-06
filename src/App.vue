@@ -1,31 +1,33 @@
 <template lang="pug">
   #app
-    .contenedor-temporizador
-      input(type="number" min="0" max="9" v-model:value="tiempo.hora")
-      span :
-      input(type="number" min="0" max="59" v-model:value="tiempo.minuto")
-      span :
-      input(type="number" min="0" max="59" v-model:value="tiempo.segundo")
-      span .
-      input(type="number" min="0" max="09" v-model:value="tiempo.milisegundo")
+    .contenedor-header.contenedor
+      .header-app
+        input(type="number" min="0" max="9" v-model="tiempo.hora" v-bind:readonly="estadoDelTiempo.activo")
+        span.simbolo :
+        input(type="number" min="0" max="59" v-model="tiempo.minuto" v-bind:readonly="estadoDelTiempo.activo")
+        span.simbolo :
+        input(type="number" min="0" max="59" v-model="tiempo.segundo" v-bind:readonly="estadoDelTiempo.activo")
+        span.simbolo .
+        input(type="number" min="0" max="9" v-model="tiempo.milisegundo" v-bind:readonly="estadoDelTiempo.activo")
     
-    .contenedor-botones
-      .contenedor-botones-principales
-        button(@click="reiniciarValores") REINICIAR
-        button(@click="reducirTiempo") {{ estadoDelTiempo.textoBoton }}
-      .contenedor-botones-secundarios
-        button(@click="agregarAlaLista") AGREGAR
+    .contenedor-botones.contenedor
+      .botones-app
+        .principales
+          button(@click="reiniciarValores") REINICIAR
+          button(@click="reducirTiempo") {{ estadoDelTiempo.activo | mostrarTextoCorrespondiente }}
+        .secundarios
+          button(@click="agregarALista") AGREGAR
+    
+    .contenedor-lista-tiempos.contenedor
+      ul.lista-tiempos-app
+        li.item(v-for="(item, indice) in listaDeTiempos")
+          button.boton-agregar-principal(@click="agregarAlPrincipal(item)") {{ indice | convertirAIndice }}
+          span.texto {{ item | convertirATiempo }}
+          .efecto-boton
+            button.boton-eliminar(@click="eliminarTiempo(indice)") ELIMINAR
 
-    ul.contenedor-de-tiempos
-
-      //- h2.contenedor-de-tiempos-titulo(v-if="listaDeTiempos.length > 0") AGREGADOS 
-      li.contenedor-de-tiempos-elemento(v-for="(item, indice) in listaDeTiempos")
-
-        button.contenedor-de-tiempos-elemento-indice(@click="agregarAlPrincipal(item)") {{ '#' + (indice+1) }}
-        span.contenedor-de-tiempos-elemento-item {{ item.hora + ':' + item.minuto + ':' + item.segundo + '.' + item.milisegundo }}
-
-        .contenedor-de-tiempos-contenedor-boton
-          button(@click="eliminarTiempo(indice)") Eliminar
+    footer.footer-app.contenedor
+      a(href="https://www.facebook.com/Hmc97" target="_blank") © Cabrera, Mauricio Hernan
 </template>
 
 <script>
@@ -39,46 +41,42 @@
           segundo: 0,
           milisegundo: 0
         },
+        estadoDelTiempo: {
+          activo: false
+        },
         listaDeTiempos: [],
         intervalo: null,
-        estadoDelTiempo: {
-          textoBoton: 'INICIAR',
-          activo: false,
-          pausa: true
-        },
         self: this
       }
     },
     methods: {
       reiniciarValores () {
-        // FUNCIONA
-        this.tiempo.hora = 0
-        this.tiempo.minuto = 0
-        this.tiempo.segundo = 0
-        this.tiempo.milisegundo = 0
+        this.inicializarTiempo()
         clearInterval(this.intervalo)
         this.estadoDelTiempo.activo = false
-        this.estadoDelTiempo.textoBoton = 'INICIAR'
       },
       reducirTiempo () {
         this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
+
         if (this.estadoDelTiempo.activo) {
-          this.estadoDelTiempo.textoBoton = 'PAUSAR'
           this.intervalo = setInterval(this.moverElTiempo, 100)
         } else {
-          this.estadoDelTiempo.textoBoton = 'INICIAR'
           clearInterval(this.intervalo)
         }
       },
-      agregarAlaLista () {
+      agregarALista () {
         if (!this.estadoDelTiempo.activo) {
           if (!this.tiempoNulo(this.tiempo)) {
-            if (this.listaDeTiempos.length < 5) {
+            if (this.listaDeTiempos.length < 3) {
+              this.tiempo.hora = parseInt(this.tiempo.hora)
+              this.tiempo.minuto = parseInt(this.tiempo.minuto)
+              this.tiempo.segundo = parseInt(this.tiempo.segundo)
+              this.tiempo.milisegundo = parseInt(this.tiempo.milisegundo)
               const obj = {
                 hora: this.tiempo.hora,
                 minuto: (this.tiempo.minuto < 10) ? '0' + this.tiempo.minuto : this.tiempo.minuto,
                 segundo: (this.tiempo.segundo < 10) ? '0' + this.tiempo.segundo : this.tiempo.segundo,
-                milisegundo: (this.tiempo.milisegundo < 10) ? '0' + this.tiempo.milisegundo : this.tiempo.milisegundo
+                milisegundo: this.tiempo.milisegundo
               }
               this.listaDeTiempos.push(obj)
               this.reiniciarValores()
@@ -100,10 +98,11 @@
         }
       },
       moverElTiempo () {
-        if (this.tiempoNulo({ hora: this.self.tiempo.hora, minuto: this.self.tiempo.minuto, segundo: this.self.tiempo.segundo, milisegundo: this.self.tiempo.milisegundo })) {
-          this.estadoDelTiempo.textoBoton = 'INICIAR'
-          clearInterval(this.intervalo)
+        if (this.tiempoNulo(this.self.tiempo)) {
+          this.self.reiniciarValores()
         } else {
+          console.log('Hola')
+          console.log(`${this.self.tiempo.hora} : ${this.self.tiempo.minuto} : ${this.self.tiempo.segundo} . ${this.self.tiempo.milisegundo}`)
           if (this.self.tiempo.minuto === 0 && this.self.tiempo.hora > 0) {
             this.self.tiempo.hora--
             this.self.tiempo.minuto = 60
@@ -119,12 +118,37 @@
           this.self.tiempo.milisegundo--
         }
       },
-      tiempoNulo (obj) {
-        if (obj.hora === 0 && obj.minuto === 0 && obj.segundo === 0 && obj.milisegundo === 0) {
+      tiempoNulo (tiempo) {
+        if (tiempo.hora === 0 && tiempo.minuto === 0 && tiempo.segundo === 0 && tiempo.milisegundo === 0) {
           return true
         } else {
           return false
         }
+      },
+      inicializarTiempo () {
+        this.tiempo.hora = this.tiempo.minuto = this.tiempo.segundo = this.tiempo.milisegundo = 0
+      }
+    },
+    filters: {
+      convertirATiempo (tiempo) {
+        return tiempo.hora + ':' + tiempo.minuto + ':' + tiempo.segundo + '.' + tiempo.milisegundo
+      },
+      convertirAIndice (indice) {
+        return '#' + (indice + 1)
+      },
+      mostrarTextoCorrespondiente (estado) {
+        if (estado) {
+          return 'PAUSAR'
+        } else {
+          return 'INICIAR'
+        }
+      },
+      convertirADosDigitos (tiempo) {
+        tiempo = parseInt(tiempo)
+        if (tiempo < 10) {
+          tiempo = '0' + tiempo
+        }
+        return tiempo
       }
     }
   }
