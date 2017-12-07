@@ -1,5 +1,6 @@
 <template lang="pug">
   #app
+
     .contenedor-header.contenedor
       .header-app
         input(type="number" min="0" max="9" v-model="tiempo.hora" v-bind:readonly="estadoDelTiempo.activo")
@@ -18,6 +19,9 @@
         .secundarios
           button(@click="agregarALista") AGREGAR
     
+    .parte-no-visible
+      audio(v-if="audio" src="src/assets/alarma.mp3" type="audio/mpeg" controls autoplay)
+    
     .contenedor-lista-tiempos.contenedor
       ul.lista-tiempos-app
         li.item(v-for="(item, indice) in listaDeTiempos")
@@ -26,8 +30,9 @@
           .efecto-boton
             button.boton-eliminar(@click="eliminarTiempo(indice)") ELIMINAR
 
+
     footer.footer-app.contenedor
-      a(href="https://www.facebook.com/Hmc97" target="_blank") © Cabrera, Mauricio Hernan
+      a(href="https://www.facebook.com/Hmc97" target="_blank") © CABRERA HERNAN MAURICIO
 </template>
 
 <script>
@@ -46,6 +51,7 @@
         },
         listaDeTiempos: [],
         intervalo: null,
+        audio: false,
         self: this
       }
     },
@@ -57,11 +63,19 @@
       },
       reducirTiempo () {
         this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
-
-        if (this.estadoDelTiempo.activo) {
-          this.intervalo = setInterval(this.moverElTiempo, 100)
+        this.self.audio = false
+        if (!this.tiempoNulo(this.tiempo)) {
+          this.tiempo.hora = parseInt(this.tiempo.hora)
+          this.tiempo.minuto = parseInt(this.tiempo.minuto)
+          this.tiempo.segundo = parseInt(this.tiempo.segundo)
+          this.tiempo.milisegundo = parseInt(this.tiempo.milisegundo)
+          if (this.estadoDelTiempo.activo) {
+            this.intervalo = setInterval(this.moverElTiempo, 100)
+          } else {
+            clearInterval(this.intervalo)
+          }
         } else {
-          clearInterval(this.intervalo)
+          this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
         }
       },
       agregarALista () {
@@ -89,7 +103,6 @@
         this.listaDeTiempos.splice(indice, 1)
       },
       agregarAlPrincipal (nuevoTiempo) {
-        console.log(nuevoTiempo)
         if (!this.estadoDelTiempo.activo) {
           this.tiempo.hora = nuevoTiempo.hora
           this.tiempo.minuto = nuevoTiempo.minuto
@@ -99,10 +112,9 @@
       },
       moverElTiempo () {
         if (this.tiempoNulo(this.self.tiempo)) {
+          this.self.audio = true
           this.self.reiniciarValores()
         } else {
-          console.log('Hola')
-          console.log(`${this.self.tiempo.hora} : ${this.self.tiempo.minuto} : ${this.self.tiempo.segundo} . ${this.self.tiempo.milisegundo}`)
           if (this.self.tiempo.minuto === 0 && this.self.tiempo.hora > 0) {
             this.self.tiempo.hora--
             this.self.tiempo.minuto = 60

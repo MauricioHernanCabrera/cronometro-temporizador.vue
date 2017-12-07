@@ -6,17 +6,19 @@ $blanco: #fef7f4;
 $celeste: #31a5bd;
 $rojo: #7b2d26;
 $alto: 100vh;
+
 body{
 	min-height: $alto;
 	background: $verde_claro;
-
 }
 .contenedor{
-	// width: 684px;
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
 	background: $verde_claro;
+}
+.parte-no-visible{
+	display: none;
 }
 .contenedor-header{
 	padding: 28px 0;
@@ -58,7 +60,7 @@ body{
 			background: $verde_oscuro;
 			transition: .3s;
 		}
-		button:hover{
+		button:focus{
 			background: rgba(0, 0, 0, 0.2);
 		}
 		.principales{
@@ -93,6 +95,10 @@ body{
 				border: 0;
 				color: $blanco;
 				cursor: pointer;
+				box-shadow: 5px 5px 2px $verde_oscuro;
+			}
+			button:active{
+				transform: scale(0.9)
 			}
 			.boton-agregar-principal{
 				width: 108px;
@@ -120,6 +126,7 @@ body{
 					height: 43px;
 					font-size: 24px;
 					background: $rojo;
+					transition: .3s;
 				}
 			}
 		}
@@ -129,8 +136,8 @@ body{
 	}
 }
 .footer-app{
-	
 	a{
+		font-size: 20px;
 		color: $blanco;
 	}
 }
