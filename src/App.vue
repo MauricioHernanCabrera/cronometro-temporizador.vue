@@ -51,8 +51,7 @@
         },
         listaDeTiempos: [],
         intervalo: null,
-        audio: false,
-        self: this
+        audio: false
       }
     },
     methods: {
@@ -63,7 +62,7 @@
       },
       reducirTiempo () {
         this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
-        this.self.audio = false
+        this.audio = false
         if (!this.tiempoNulo(this.tiempo)) {
           this.tiempo.hora = parseInt(this.tiempo.hora)
           this.tiempo.minuto = parseInt(this.tiempo.minuto)
@@ -111,23 +110,23 @@
         }
       },
       moverElTiempo () {
-        if (this.tiempoNulo(this.self.tiempo)) {
-          this.self.audio = true
-          this.self.reiniciarValores()
+        if (this.tiempoNulo(this.tiempo)) {
+          this.audio = true
+          this.reiniciarValores()
         } else {
-          if (this.self.tiempo.minuto === 0 && this.self.tiempo.hora > 0) {
-            this.self.tiempo.hora--
-            this.self.tiempo.minuto = 60
+          if (this.tiempo.minuto === 0 && this.tiempo.hora > 0 && this.tiempo.segundo === 0 && this.tiempo.milisegundo === 0) {
+            this.tiempo.hora--
+            this.tiempo.minuto = 60
           }
-          if (this.self.tiempo.segundo === 0 && this.self.tiempo.minuto > 0) {
-            this.self.tiempo.minuto--
-            this.self.tiempo.segundo = 60
+          if (this.tiempo.segundo === 0 && this.tiempo.minuto > 0 && this.tiempo.milisegundo === 0) {
+            this.tiempo.minuto--
+            this.tiempo.segundo = 60
           }
-          if (this.self.tiempo.milisegundo === 0 && this.self.tiempo.segundo > 0) {
-            this.self.tiempo.segundo--
-            this.self.tiempo.milisegundo = 10
+          if (this.tiempo.milisegundo === 0 && this.tiempo.segundo > 0) {
+            this.tiempo.segundo--
+            this.tiempo.milisegundo = 10
           }
-          this.self.tiempo.milisegundo--
+          this.tiempo.milisegundo--
         }
       },
       tiempoNulo (tiempo) {
