@@ -62,8 +62,8 @@
       reducirTiempo () {
         this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
         this.audio = false
+        this.convertirAEntero()
         if (!this.tiempoNulo(this.tiempo)) {
-          this.convertirAEntero()
           this.convertirADosDigitos()
           if (this.estadoDelTiempo.activo) {
             this.intervalo = setInterval(this.moverElTiempo, 100)

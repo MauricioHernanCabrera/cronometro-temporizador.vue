@@ -5,10 +5,9 @@ $verde_oscuro: #003133;
 $blanco: #fef7f4;
 $celeste: #108CA5;
 $rojo: #7b2d26;
-$alto: 100vh;
 
 body{
-	min-height: $alto;
+	min-height: 100vh;
 	background: $verde_claro;
 	font-family: sans-serif;
 }
