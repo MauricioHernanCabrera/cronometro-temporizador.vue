@@ -1,6 +1,5 @@
 <template lang="pug">
   #app
-
     .contenedor-header.contenedor
       .header-app
         input(type="number" min="0" max="9" v-model="tiempo.hora" v-bind:readonly="estadoDelTiempo.activo")
@@ -64,41 +63,32 @@
         this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
         this.audio = false
         if (!this.tiempoNulo(this.tiempo)) {
-          this.tiempo.hora = parseInt(this.tiempo.hora)
-          this.tiempo.minuto = parseInt(this.tiempo.minuto)
-          this.tiempo.segundo = parseInt(this.tiempo.segundo)
-          this.tiempo.milisegundo = parseInt(this.tiempo.milisegundo)
+          this.convertirAEntero()
+          this.convertirADosDigitos()
           if (this.estadoDelTiempo.activo) {
             this.intervalo = setInterval(this.moverElTiempo, 100)
           } else {
             clearInterval(this.intervalo)
           }
         } else {
+          this.convertirADosDigitos()
           this.estadoDelTiempo.activo = !this.estadoDelTiempo.activo
         }
       },
       agregarALista () {
-        if (!this.estadoDelTiempo.activo) {
-          if (!this.tiempoNulo(this.tiempo)) {
-            if (this.listaDeTiempos.length < 3) {
-              this.tiempo.hora = parseInt(this.tiempo.hora)
-              this.tiempo.minuto = parseInt(this.tiempo.minuto)
-              this.tiempo.segundo = parseInt(this.tiempo.segundo)
-              this.tiempo.milisegundo = parseInt(this.tiempo.milisegundo)
-              const obj = {
-                hora: this.tiempo.hora,
-                minuto: (this.tiempo.minuto < 10) ? '0' + this.tiempo.minuto : this.tiempo.minuto,
-                segundo: (this.tiempo.segundo < 10) ? '0' + this.tiempo.segundo : this.tiempo.segundo,
-                milisegundo: this.tiempo.milisegundo
-              }
-              this.listaDeTiempos.push(obj)
-              this.reiniciarValores()
-            }
+        if ((!this.estadoDelTiempo.activo) && (!this.tiempoNulo(this.tiempo)) && this.listaDeTiempos.length < 3) {
+          this.convertirAEntero()
+          const obj = {
+            hora: this.tiempo.hora,
+            minuto: (this.tiempo.minuto < 10) ? '0' + this.tiempo.minuto : this.tiempo.minuto,
+            segundo: (this.tiempo.segundo < 10) ? '0' + this.tiempo.segundo : this.tiempo.segundo,
+            milisegundo: this.tiempo.milisegundo
           }
+          this.listaDeTiempos.push(obj)
+          this.reiniciarValores()
         }
       },
       eliminarTiempo (indice) {
-        console.log(indice)
         this.listaDeTiempos.splice(indice, 1)
       },
       agregarAlPrincipal (nuevoTiempo) {
@@ -114,6 +104,7 @@
           this.audio = true
           this.reiniciarValores()
         } else {
+          this.convertirAEntero()
           if (this.tiempo.minuto === 0 && this.tiempo.hora > 0 && this.tiempo.segundo === 0 && this.tiempo.milisegundo === 0) {
             this.tiempo.hora--
             this.tiempo.minuto = 60
@@ -127,6 +118,7 @@
             this.tiempo.milisegundo = 10
           }
           this.tiempo.milisegundo--
+          this.convertirADosDigitos()
         }
       },
       tiempoNulo (tiempo) {
@@ -138,6 +130,16 @@
       },
       inicializarTiempo () {
         this.tiempo.hora = this.tiempo.minuto = this.tiempo.segundo = this.tiempo.milisegundo = 0
+      },
+      convertirAEntero () {
+        this.tiempo.hora = parseInt(this.tiempo.hora)
+        this.tiempo.minuto = parseInt(this.tiempo.minuto)
+        this.tiempo.segundo = parseInt(this.tiempo.segundo)
+        this.tiempo.milisegundo = parseInt(this.tiempo.milisegundo)
+      },
+      convertirADosDigitos () {
+        this.tiempo.minuto = (this.tiempo.minuto < 10) ? `0${this.tiempo.minuto}` : this.tiempo.minuto
+        this.tiempo.segundo = (this.tiempo.segundo < 10) ? `0${this.tiempo.segundo}` : this.tiempo.segundo
       }
     },
     filters: {
@@ -153,13 +155,6 @@
         } else {
           return 'INICIAR'
         }
-      },
-      convertirADosDigitos (tiempo) {
-        tiempo = parseInt(tiempo)
-        if (tiempo < 10) {
-          tiempo = '0' + tiempo
-        }
-        return tiempo
       }
     }
   }

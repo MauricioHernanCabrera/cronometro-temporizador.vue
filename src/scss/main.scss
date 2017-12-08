@@ -10,7 +10,9 @@ $alto: 100vh;
 body{
 	min-height: $alto;
 	background: $verde_claro;
+	font-family: sans-serif;
 }
+
 .contenedor{
 	margin: 0 auto;
 	display: flex;
@@ -38,8 +40,8 @@ body{
 		span{
 			background: $verde_claro;
 			color: $blanco;
-			font-size: 80px;
-			padding: 0 5.5px;
+			font-size: 72px;
+			padding: 0 4.6px;
 			display: inline-block;
 		}
 	}
