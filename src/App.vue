@@ -100,11 +100,11 @@
         }
       },
       moverElTiempo () {
+        this.convertirAEntero()
         if (this.tiempoNulo(this.tiempo)) {
           this.audio = true
           this.reiniciarValores()
         } else {
-          this.convertirAEntero()
           if (this.tiempo.minuto === 0 && this.tiempo.hora > 0 && this.tiempo.segundo === 0 && this.tiempo.milisegundo === 0) {
             this.tiempo.hora--
             this.tiempo.minuto = 60
