@@ -76,7 +76,7 @@
         }
       },
       agregarALista () {
-        if ((!this.estadoDelTiempo.activo) && (!this.tiempoNulo(this.tiempo)) && this.listaDeTiempos.length < 3) {
+        if ((!this.estadoDelTiempo.activo) && (!this.tiempoNulo(this.tiempo)) && this.listaDeTiempos.length < 5) {
           this.convertirAEntero()
           const obj = {
             hora: this.tiempo.hora,
