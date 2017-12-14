@@ -1,11 +1,10 @@
 <template lang="pug">
-  .contenedor-botones.contenedor
-    .botones-app
-      .principales
-        button(@click="reiniciarValores") REINICIAR
-        button(@click="reducirTiempo") {{ estadoDelTiempo.activo | mostrarTextoCorrespondiente }}
-      .secundarios
-        button(@click="agregarALista") AGREGAR
+  div.botones
+    .principales
+      button(@click="reiniciarValores") REINICIAR
+      button(@click="reducirTiempo") {{ estadoDelTiempo.activo | mostrarTextoCorrespondiente }}
+    .secundarios
+      button(@click="agregarALista") AGREGAR
 </template>
 
 <script>
@@ -37,5 +36,44 @@ export default{
 </script>
 
 <style lang="scss">
-  
+  $blanco: #fff;
+  .botones{
+    button{
+      display: inline-block;
+      padding: 20px 0;
+      color: $blanco;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-size: 0.9em;
+      background: #003133;
+    }
+    .principales{
+      display: flex;
+      justify-content: space-between;
+      button{
+        width: 49.2%;
+      }
+    }
+    .secundarios{
+      margin-top: 1.5%;
+      button{
+        width: 100%;
+      }
+    }
+  }
+  @media (max-width: 525px){
+    .botones{
+      button{
+        padding: 16px 0;
+      }
+    }
+  }
+  @media (max-width: 425px){
+    .botones{
+      button{
+        padding: 12.8px 0;
+      }
+    }
+  }
 </style>

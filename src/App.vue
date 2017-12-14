@@ -1,28 +1,28 @@
 <template lang="pug">
   #app
-    app-audio(
+    app-audio.contenedor(
               :activo="audioActivo"
     )
 
-    app-tiempo(
+    app-tiempo.contenedor(
                 :tiempo="tiempo"
                 :estadoDelTiempo="estadoDelTiempo"
     )
     
-    app-botones(
+    app-botones.contenedor(
                 :estadoDelTiempo="estadoDelTiempo"
                 @reiniciar="reiniciarValores"
                 @reducir="reducirTiempo"
                 @agregar="agregarALista"
     )
     
-    app-lista-de-tiempos(
+    app-lista-de-tiempos.contenedor(
                           :listaDeTiempos="listaDeTiempos"
                           @agregarPrincipal="agregarAlPrincipal"
                           @eliminar="eliminarTiempo"
     )
     
-    app-footer
+    app-footer.contenedor
 </template>
 
 <script>
@@ -40,8 +40,8 @@ export default {
     return {
       tiempo: {
         hora: 0,
-        minuto: 0,
-        segundo: 0,
+        minuto: '00',
+        segundo: '00',
         milisegundo: 0
       },
       estadoDelTiempo: {
@@ -128,7 +128,8 @@ export default {
       }
     },
     inicializarTiempo () {
-      this.tiempo.hora = this.tiempo.minuto = this.tiempo.segundo = this.tiempo.milisegundo = 0
+      this.tiempo.hora = this.tiempo.milisegundo = 0
+      this.tiempo.minuto = this.tiempo.segundo = '00'
     },
     convertirAEntero () {
       this.tiempo.hora = parseInt(this.tiempo.hora)
@@ -145,6 +146,40 @@ export default {
 </script>
 
 <style lang="scss">
+$blanco: #fff;
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+body{
+  min-height: 100vh;
+  font-size: 32px;
+  font-family: sans-serif;
+  background: #00393b;
+  color: #fef7f4;
+}
+.contenedor{
+  max-width: 700px;
+  margin-top: 15px;
+  margin: 10px auto;
+}
+@media (max-width: 525px){
+  body{
+    font-size: 25.6px;
+  }
+}
+@media (max-width: 425px){
+  body{
+    font-size: 20.48px;
+  }
+}
+@media (max-width: 325px){
+  body{
+    font-size: 16px;
+  }
+}
 /*
 $verde_claro: #00393b;
 $verde_oscuro: #003133;
