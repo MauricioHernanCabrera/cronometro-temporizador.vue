@@ -1,6 +1,6 @@
 <template lang="pug">
   ul.lista-tiempos
-    li.item(v-for="(t, indice) in listaDeTiempos")
+    li.item(v-for="(t, indice) in lista")
       .contenedor-btn-texto
         button.btn-agregar(@click="agregarAlPrincipal(t)") {{ indice | convertirAIndice }}
         span.texto {{ t | convertirATiempo }}
@@ -10,14 +10,16 @@
 <script>
 export default{
   props: {
-    listaDeTiempos: { type: Array }
+    lista: { type: Array },
+    obj: { type: Object, required: true },
+    opts: { type: Number, required: true }
   },
   methods: {
     agregarAlPrincipal (t) {
-      this.$emit('agregarPrincipal', t)
+      this.$emit('agregar', t, this.obj, this.opts)
     },
     eliminarTiempo (indice) {
-      this.$emit('eliminar', indice)
+      this.$emit('eliminar', indice, this.obj)
     }
   },
   filters: {
@@ -35,7 +37,7 @@ export default{
   .lista-tiempos{
     min-height: 365px;
     .item{
-      border-bottom: 5px solid #003133;
+      border-bottom: 7px solid #003133;
       display: flex;
       align-items: center;
       justify-content: space-between;

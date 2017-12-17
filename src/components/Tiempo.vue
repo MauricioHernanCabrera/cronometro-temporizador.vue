@@ -1,22 +1,43 @@
 <template lang="pug">
   div
-    input.hora.tiempo(type="number" min="0" max="9" v-model="tiempo.hora" v-bind:readonly="estadoDelTiempo.activo")
+    input.hora.tiempo(
+      type="number"
+      min="0"
+      max="9"
+      v-model="tiempo.hora"
+      :readonly="activo"
+    )
     span.simbolo :
-
-    input.minuto.tiempo(type="number" min="0" max="59" v-model="tiempo.minuto" v-bind:readonly="estadoDelTiempo.activo")
+    input.minuto.tiempo(
+      type="number"
+      min="0"
+      max="59"
+      v-model="tiempo.minuto"
+      :readonly="activo"
+    )
     span.simbolo :
-
-    input.segundo.tiempo(type="number" min="0" max="59" v-model="tiempo.segundo" v-bind:readonly="estadoDelTiempo.activo")
+    input.segundo.tiempo(
+      type="number"
+      min="0"
+      max="59"
+      v-model="tiempo.segundo"
+      :readonly="activo"
+    )
     span.simbolo .
-
-    input.milisegundo.tiempo(type="number" min="0" max="9" v-model="tiempo.milisegundo" v-bind:readonly="estadoDelTiempo.activo")
+    input.milisegundo.tiempo(
+      type="number"
+      min="0"
+      max="9"
+      v-model="tiempo.milisegundo"
+      :readonly="activo"
+    )
 </template>
 
 <script>
 export default{
   props: {
     tiempo: { type: Object, required: true },
-    estadoDelTiempo: { type: Object, required: true }
+    activo: { type: Boolean, required: true }
   }
 }
 </script>

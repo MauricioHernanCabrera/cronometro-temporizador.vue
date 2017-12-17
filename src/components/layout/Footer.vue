@@ -1,6 +1,6 @@
 <template lang="pug">
   footer.footer
-    a(href="https://www.facebook.com/Hmc97" target="_blank") CABRERA HERNAN MAURICIO
+    span CABRERA HERNAN MAURICIO
 </template>
 
 <style lang="scss">
@@ -10,13 +10,9 @@
     justify-content: center;
     align-items: center;
     font-size: 0.75em;
-    a{
+    span{
       text-decoration: none;
       color: #fef7f4;
     }
-    a:hover{
-      text-decoration: underline;
-    }
   }
-  
 </style>

@@ -2,7 +2,7 @@
   div.botones
     .principales
       button(@click="reiniciarValores") REINICIAR
-      button(@click="reducirTiempo") {{ estadoDelTiempo.activo | mostrarTextoCorrespondiente }}
+      button(@click="reducirTiempo") {{ tiempoActivo | mostrarTextoCorrespondiente }}
     .secundarios
       button(@click="agregarALista") AGREGAR
 </template>
@@ -10,17 +10,19 @@
 <script>
 export default{
   props: {
-    estadoDelTiempo: { type: Object, required: true }
+    tiempoActivo: { type: Boolean, required: true },
+    obj: { type: Object, required: true },
+    opts: { type: Number, required: true }
   },
   methods: {
     reiniciarValores () {
-      this.$emit('reiniciar')
+      this.$emit('reiniciar', this.obj)
     },
     reducirTiempo () {
-      this.$emit('reducir')
+      this.$emit('iniciar', this.obj)
     },
     agregarALista () {
-      this.$emit('agregar')
+      this.$emit('agregar', this.obj, this.opts)
     }
   },
   filters: {
