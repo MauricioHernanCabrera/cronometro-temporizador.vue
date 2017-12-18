@@ -1,128 +1,57 @@
 <template lang="pug">
   #app
-    ul.menu
-      li(:class="{'opcion-activo': opcionApp === 1 }" @click="cambiarApp(1)")
-        button.icon.icon-hour-glass
-      li(:class="{'opcion-activo': opcionApp === 2 }" @click="cambiarApp(2)")
-        button.icon.icon-stopwatch
-      li(:class="{'opcion-activo': opcionApp === 3 }" @click="cambiarApp(3)")
-        button.icon.icon-hammer
-      li(:class="{'opcion-activo': opcionApp === 4 }" @click="cambiarApp(4)")
-        button.icon.icon-man
-  
-    app-audio.contenedor(
-      :activo="temporizador.audioActivo"
-    )
-    app-audio.contenedor(
-      :activo="manual.audioActivo"
+    app-menu-opciones(
+      :opcionApp="opcionApp"
+      @cambiar="cambiarApp"
     )
     
-    //-Temporizador
-    div(v-show="opcionApp === 1")
-      app-tiempo.contenedor(
-        :tiempo="temporizador.tiempo"
-        :activo="temporizador.tiempoActivo"
-      )
-      //- aca---------------------------
-      app-botones.contenedor(
-        :tiempoActivo="temporizador.tiempoActivo"
-        :obj="temporizador"
-        :opts="1"
-        @reiniciar="reiniciarValores"
-        @iniciar="reducirTiempo"
-        @agregar="agregarALista"
-      )
-      app-lista-de-tiempos.contenedor(
-        :lista="temporizador.listaDeTiempos"
-        :obj="temporizador"
-        :opts="1"
-        @agregar="agregarAlPrincipal"
-        @eliminar="eliminarTiempo"
-      )
-    
-    //-Cronometro
-    div(v-show="opcionApp === 2")
-      app-tiempo.contenedor(
-        :tiempo="cronometro.tiempo"
-        :activo="(cronometro.tiempoActivo || !cronometro.tiempoActivo)"
-      )
-      //- aca---------------------------
-      app-botones.contenedor(
-        :tiempoActivo="cronometro.tiempoActivo"
-        :obj="cronometro"
-        :opts="2"
-        @reiniciar="reiniciarValores"
-        @iniciar="incrementarTiempo"
-        @agregar="agregarALista"
-      )
-      app-lista-de-tiempos.contenedor(
-        :lista="cronometro.listaDeTiempos"
-        :obj="cronometro"
-        :opts="2"
-        @agregar="agregarAlPrincipal"
-        @eliminar="eliminarTiempo"
-      )
-    
-    //-Manual
-    div(v-show="opcionApp === 3")
-      //- aca---------------------------
-      //- app-botones.contenedor(
-      //-   :tiempoActivo="manual.tiempoActivo"
-      //-   :obj="manual"
-      //-   :opts="1"
-      //-   @reiniciar="reiniciarValores"
-      //-   @iniciar=""
-      //-   @agregar="agregarALista"
-      //- )
-      //- app-tiempo.contenedor(
-      //-   :tiempo="manual.tiempo"
-      //-   :activo="manual.tiempoActivo"
-      //- )
-      //- app-lista-de-tiempos.contenedor(
-      //-   :lista="manual.listaDeTiempos"
-      //-   :obj="manual"
-      //-   :opts="2"
-      //-   @agregar="agregarAlPrincipal"
-      //-   @eliminar="eliminarTiempo"
-      //- )
+    app-temporizador(
+      :opcionApp="opcionApp"
+      :obj="temporizador"
+      @reiniciarBtnBotones="reiniciarValores"
+      @iniciarBtnBotones="reducirTiempo"
+      @agregarBtnBotones="agregarALista"
+      @agregarBtnLista="agregarAlPrincipal"
+      @eliminarBtnLista="eliminarTiempo"
+    )
+    app-cronometro(
+      :opcionApp="opcionApp"
+      :obj="cronometro"
+      @reiniciarBtnBotones="reiniciarValores"
+      @iniciarBtnBotones="incrementarTiempo"
+      @agregarBtnBotones="agregarALista"
+      @agregarBtnLista="agregarAlPrincipal"
+      @eliminarBtnLista="eliminarTiempo"
+    )
+    app-manual(
+      :opcionApp="opcionApp"
+      :obj="manual"
+      @reiniciarBtnBotones="inicializarValoresManual"
+      @iniciarBtnBotones="iniciarManual"
+      @agregarBtnBotones="activarAgregarTiempo"
+      @agregarBtnNuevoTiempo="agregarALista"
+      @cancelarBtnNuevoTiempo="cancelarTiempo"
+      @agregarBtnLista="agregarAlPrincipal"
+      @eliminarBtnLista="eliminarTiempo"
+    )
       
-    //-Yo :)
-    div(v-show="opcionApp === 4")
-      ul.redes.contenedor
-        li: a.icon(
-          href="https://www.facebook.com/Hmc97"
-          target="_blank"
-        ) 
-          span.texto Facebook
-        li: a.icon(
-          href="https://twitter.com/hernanmc06"
-          target="_blank"
-        ) 
-          span.texto Twitter
-        li: a.icon(
-          href="https://www.instagram.com/hernanmauriciocabrera/"
-          target="_blank"
-        )
-          span.texto Instagram
-        li: a.icon(
-          href="https://github.com/HernanCabrera"
-          target="_blank"
-        )
-          span.texto Github
-    
+    app-menu-redes(:opcionApp="opcionApp")
+    app-audio.contenedor(:activo="temporizador.audioActivo")
+    app-audio.contenedor(:activo="manual.audioActivo")
 </template>
 
 <script>
 
-import AppAudio from './components/Audio'
-import AppTiempo from './components/Tiempo'
-import AppBotones from './components/Botones'
-import AppListaDeTiempos from './components/ListaDeTiempos'
-import AppIteraciones from './components/Iteraciones.vue'
+import AppMenuOpciones from './components/padre/MenuOpciones'
+import AppTemporizador from './components/padre/Temporizador'
+import AppCronometro from './components/padre/Cronometro'
+import AppManual from './components/padre/Manual'
+import AppMenuRedes from './components/padre/MenuRedes'
+import AppAudio from './components/padre/Audio'
 
 export default {
   name: 'app',
-  components: { AppTiempo, AppBotones, AppAudio, AppListaDeTiempos, AppIteraciones },
+  components: { AppAudio, AppMenuRedes, AppMenuOpciones, AppTemporizador, AppCronometro, AppManual },
   data () {
     return {
       temporizador: {
@@ -156,8 +85,11 @@ export default {
           milisegundo: 0
         },
         listaDeTiempos: [],
+        listaDeTiemposTotal: [],
         tiempoActivo: false,
         intervalo: null,
+        agregarActivo: false,
+        audioActivo: false,
         iteraciones: 1
       },
       opcionApp: 1
@@ -204,10 +136,9 @@ export default {
       }
     },
     agregarALista (obj, opts) {
-      console.log(opts)
       let max = 0
       let auxTiempoActivo = obj.tiempoActivo
-      if (opts === 1) {
+      if (opts === 1 || opts === 3) {
         max = 5
       } else {
         max = 50
@@ -224,13 +155,23 @@ export default {
         if (opts === 1) {
           obj.listaDeTiempos.push(aux)
           this.reiniciarValores(obj)
-        } else {
+        } else if (opts === 2) {
           obj.listaDeTiempos.unshift(aux)
+        } else {
+          obj.listaDeTiemposTotal = []
+          obj.listaDeTiempos.push(aux)
+          this.reiniciarValores(obj)
+          this.cancelarTiempo(obj)
         }
       }
     },
-    eliminarTiempo (indice, obj) {
+    eliminarTiempo (indice, obj, opts) {
       obj.listaDeTiempos.splice(indice, 1)
+      if (opts === 3) {
+        obj.listaDeTiemposTotal = []
+        obj.intervalo = null
+        this.inicializarTiempo(obj.tiempo)
+      }
     },
     agregarAlPrincipal (nuevoTiempo, obj, opts) {
       if (!obj.tiempoActivo && opts === 1) {
@@ -265,7 +206,6 @@ export default {
     incrementarValores (obj) {
       this.convertirAEntero(obj.tiempo)
       obj.tiempo.milisegundo++
-
       if (obj.tiempo.milisegundo === 10) {
         obj.tiempo.segundo++
         obj.tiempo.milisegundo = 0
@@ -303,6 +243,94 @@ export default {
     },
     cambiarApp (opcion) {
       this.opcionApp = opcion
+    },
+    activarAgregarTiempo (obj, opts) {
+      obj.agregarActivo = true
+    },
+    cancelarTiempo (obj) {
+      obj.agregarActivo = false
+      this.inicializarTiempo(obj.tiempo)
+    },
+    inicializarValoresManual (obj) {
+      obj.listaDeTiempos = []
+      obj.listaDeTiemposTotal = []
+      this.inicializarTiempo(obj.tiempo)
+      obj.intervalo = null
+      obj.iteraciones = 1
+    },
+    iniciarManual (obj) {
+      if (obj.listaDeTiemposTotal.length === 0) {
+        this.armarArregloDeTiemposTotales(obj)
+      }
+      if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
+        obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
+      }
+      obj.tiempoActivo = !obj.tiempoActivo
+      obj.audioActivo = false
+      this.convertirAEntero(obj.tiempo)
+      if (!this.tiempoNulo(obj.tiempo)) {
+        this.convertirADosDigitos(obj.tiempo)
+        if (obj.tiempoActivo) {
+          const self = this
+          obj.intervalo = setInterval(function () {
+            self.reducirValoresManual(obj)
+          }, 100)
+        } else {
+          clearInterval(obj.intervalo)
+        }
+      } else {
+        this.convertirADosDigitos(obj.tiempo)
+        obj.tiempoActivo = !obj.tiempoActivo
+      }
+    },
+    clonarObjeto (obj) {
+      return Object.assign({}, obj)
+    },
+    reducirValoresManual (obj) {
+      this.convertirAEntero(obj.tiempo)
+      if (this.tiempoNulo(obj.tiempo)) {
+        obj.listaDeTiemposTotal.shift()
+        if (obj.listaDeTiemposTotal.length === 0) {
+          obj.iteraciones--
+          obj.audioActivo = true
+          setTimeout(() => {
+            obj.audioActivo = false
+          }, 1000)
+          this.reiniciarValores(obj)
+        } else {
+          obj.audioActivo = true
+          setTimeout(() => {
+            obj.audioActivo = false
+          }, 1000)
+          obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
+          if (obj.listaDeTiemposTotal.length % obj.listaDeTiempos.length === 0) {
+            obj.iteraciones--
+          }
+        }
+      } else {
+        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.hora--
+          obj.tiempo.minuto = 60
+        }
+        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.minuto--
+          obj.tiempo.segundo = 60
+        }
+        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
+          obj.tiempo.segundo--
+          obj.tiempo.milisegundo = 10
+        }
+        obj.tiempo.milisegundo--
+        this.convertirADosDigitos(obj.tiempo)
+      }
+    },
+    armarArregloDeTiemposTotales (obj) {
+      const cantElementos = obj.iteraciones * obj.listaDeTiempos.length
+      const longitudDeListaDeTiempos = obj.listaDeTiempos.length
+      for (let i = 0; i < cantElementos; i++) {
+        const indice = i % longitudDeListaDeTiempos
+        obj.listaDeTiemposTotal.push(this.clonarObjeto(obj.listaDeTiempos[indice]))
+      }
     }
   }
 }
@@ -310,8 +338,6 @@ export default {
 
 <style lang="scss">
 
-
-$blanco: #fff;
 *{
   box-sizing: border-box;
   margin: 0;
@@ -327,61 +353,7 @@ body{
 }
 .contenedor{
   max-width: 700px;
-  margin-top: 15px;
   margin: 10px auto;
-}
-.menu{
-  background: #003133;
-  list-style: none;
-  display: flex;
-  margin: 0 auto;
-  max-width: 700px;
-  li{
-    width: 25%;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: .3s;
-    .icon{
-      font-size: 1.2em;
-      color: $blanco;
-      background: none;
-      cursor: pointer;
-    }
-  }
-  .icon:last-child{
-    border-right: 0;
-  }
-}
-.opcion-activo{
-  background: #002426;
-}
-.redes{
-  list-style: none;
-  margin: 0 auto;
-  li{
-    margin-top: 2%;
-    text-align: center;
-    .icon{
-      text-decoration: none;
-      color: $blanco;
-      padding: 40px 0;
-      display: block;
-      background: #003133;
-      transition: .3s;
-    }
-    .icon:active{
-      background: #002426;
-    }
-    .icon:hover{
-      background: #002426;
-    }
-  }
-  li:last-child{
-    margin-bottom: 30px;
-  }
 }
 @media (max-width: 525px){
   body{
@@ -390,16 +362,6 @@ body{
   .menu{
     li{
       height: 80px;
-    }
-  }
-  .redes{
-    li{
-      .icon{
-        padding: 32px 0;
-      }
-    }
-    li:last-child{
-      margin-bottom: 24px;
     }
   }
 }
@@ -412,16 +374,6 @@ body{
       height: 64px;
     }
   }
-  .redes{
-    li{
-      .icon{
-        padding: 25.6px 0;
-      }
-    }
-    li:last-child{
-      margin-bottom: 19.2px;
-    }
-  }
 }
 @media (max-width: 325px){
   body{
@@ -430,16 +382,6 @@ body{
   .menu{
     li{
       height: 51.2px;
-    }
-  }
-  .redes{
-    li{
-      .icon{
-        padding: 20.48px 0;
-      }
-    }
-    li:last-child{
-      margin-bottom: 15.36px;
     }
   }
 }

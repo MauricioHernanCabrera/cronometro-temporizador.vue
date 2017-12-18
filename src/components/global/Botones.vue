@@ -4,7 +4,15 @@
       button(@click="reiniciarValores") REINICIAR
       button(@click="reducirTiempo") {{ tiempoActivo | mostrarTextoCorrespondiente }}
     .secundarios
-      button(@click="agregarALista") AGREGAR
+      button(
+        v-show="opts != 3"
+        @click="agregarALista" 
+      ) AGREGAR
+      button(
+        v-show="opts == 3"
+        @click="agregarALista" 
+        :disabled="obj.tiempoActivo"
+      ) AGREGAR
 </template>
 
 <script>
