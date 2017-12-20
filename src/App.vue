@@ -86,6 +86,7 @@ export default {
         tiempoActivo: false,
         audioActivo: false,
         audioNombre: 'temporizador',
+        audioID: null,
         intervalo: null
       },
       cronometro: {
@@ -113,20 +114,25 @@ export default {
         agregarActivo: false,
         audioActivo: false,
         audioNombre: 'manual',
+        audioID: null,
         iteraciones: 1
       },
       opcionApp: 1
     }
   },
+  mounted () {
+    this.temporizador.audioID = document.getElementById('temporizador')
+    this.manual.audioID = document.getElementById('manual')
+  },
   watch: {
     'manual.audioActivo' () {
       if (this.manual.audioActivo) {
-        document.getElementById('manual').play()
+        this.manual.audioID.play()
       }
     },
     'temporizador.audioActivo' () {
       if (this.temporizador.audioActivo) {
-        document.getElementById('temporizador').play()
+        this.temporizador.audioID.play()
       }
     }
   },
@@ -148,7 +154,8 @@ export default {
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
-      document.getElementById('temporizador').play()
+      obj.audioID.play()
+      obj.audioID.pause()
       if (!this.tiempoNulo(obj.tiempo)) {
         this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
@@ -229,9 +236,7 @@ export default {
       this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
         obj.audioActivo = true
-        setTimeout(() => {
-          document.getElementById(obj.audioNombre).play()
-        }, 50)
+        obj.audioID.play()
         this.reiniciarValores(obj)
       } else {
         if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
@@ -312,7 +317,8 @@ export default {
       if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
         obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
       }
-      document.getElementById('temporizador').play()
+      obj.audioID.play()
+      obj.audioID.pause()
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
