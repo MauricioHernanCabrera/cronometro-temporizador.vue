@@ -46,6 +46,13 @@
       type="audio/mpeg" 
       controls
     )
+    audio(
+      :id="manual.audioNombre"
+      v-if="manual.audioActivo" 
+      src="src/assets/alarma.mp3" 
+      type="audio/mpeg" 
+      controls
+    )
     //- audio(
     //-   src="src/assets/alarma.mp3" 
     //-   type="audio/mpeg" 
@@ -107,6 +114,7 @@ export default {
         intervalo: null,
         agregarActivo: false,
         audioActivo: false,
+        audioNombre: 'manual',
         iteraciones: 1
       },
       opcionApp: 1
@@ -118,7 +126,7 @@ export default {
       if (this.estaActivo) {
         setTimeout(() => {
           document.getElementById(this.audio).play()
-        }, 10)
+        }, 50)
       }
     },
     reiniciarValores (obj) {
@@ -212,7 +220,7 @@ export default {
         obj.audioActivo = true
         setTimeout(() => {
           document.getElementById(obj.audioNombre).play()
-        }, 10)
+        }, 50)
         this.reiniciarValores(obj)
       } else {
         if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
@@ -322,11 +330,17 @@ export default {
           obj.iteraciones--
           obj.audioActivo = true
           setTimeout(() => {
+            document.getElementById(obj.audioNombre).play()
+          }, 50)
+          setTimeout(() => {
             obj.audioActivo = false
           }, 1000)
           this.reiniciarValores(obj)
         } else {
           obj.audioActivo = true
+          setTimeout(() => {
+            document.getElementById(obj.audioNombre).play()
+          }, 50)
           setTimeout(() => {
             obj.audioActivo = false
           }, 1000)
