@@ -41,18 +41,14 @@
 
     audio(
       :id="temporizador.audioNombre" 
-      v-if="temporizador.audioActivo" 
       src="src/assets/alarma.mp3" 
       type="audio/mpeg"
-      preload="auto"
       controls
     )
     audio(
       :id="manual.audioNombre"
-      v-if="manual.audioActivo" 
       src="src/assets/alarma.mp3" 
       type="audio/mpeg" 
-      preload="auto"
       controls
     )
     //- audio(
