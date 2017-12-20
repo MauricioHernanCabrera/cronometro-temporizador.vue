@@ -36,9 +36,6 @@
     )
       
     app-menu-redes(:opcionApp="opcionApp")
-    //- app-audio.contenedor(:activo="temporizador.audioActivo")
-    //- app-audio.contenedor(:activo="manual.audioActivo")
-
     audio(
       :id="temporizador.audioNombre" 
       src="src/assets/alarma.mp3" 
@@ -51,12 +48,6 @@
       type="audio/mpeg" 
       controls
     )
-    //- audio(
-    //-   src="src/assets/alarma.mp3" 
-    //-   type="audio/mpeg" 
-    //-   controls
-    //- )
-    //- button(@click="activarAudio") Activar
 </template>
 
 <script>
@@ -137,14 +128,6 @@ export default {
     }
   },
   methods: {
-    // activarAudio () {
-    //   this.estaActivo = !this.estaActivo
-    //   if (this.estaActivo) {
-    //     setTimeout(() => {
-    //       document.getElementById(this.audio).play()
-    //     }, 50)
-    //   }
-    // },
     reiniciarValores (obj) {
       this.inicializarTiempo(obj.tiempo)
       clearInterval(obj.intervalo)
@@ -317,8 +300,10 @@ export default {
       if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
         obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
       }
+      // Solucion al problema de celulares
       obj.audioID.play()
       obj.audioID.pause()
+      // ----------------------------------
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
@@ -397,6 +382,10 @@ export default {
   margin: 0;
   padding: 0;
   border: 0;
+}
+audio{
+  position: absolute;
+  opacity: 0;
 }
 body{
   max-height: 100vh;
