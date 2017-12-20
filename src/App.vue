@@ -118,15 +118,27 @@ export default {
       opcionApp: 1
     }
   },
-  methods: {
-    activarAudio () {
-      this.estaActivo = !this.estaActivo
-      if (this.estaActivo) {
-        setTimeout(() => {
-          document.getElementById(this.audio).play()
-        }, 50)
+  watch: {
+    'manual.audioActivo' () {
+      if (this.manual.audioActivo) {
+        document.getElementById('manual').play()
       }
     },
+    'temporizador.audioActivo' () {
+      if (this.temporizador.audioActivo) {
+        document.getElementById('temporizador').play()
+      }
+    }
+  },
+  methods: {
+    // activarAudio () {
+    //   this.estaActivo = !this.estaActivo
+    //   if (this.estaActivo) {
+    //     setTimeout(() => {
+    //       document.getElementById(this.audio).play()
+    //     }, 50)
+    //   }
+    // },
     reiniciarValores (obj) {
       this.inicializarTiempo(obj.tiempo)
       clearInterval(obj.intervalo)
@@ -136,6 +148,7 @@ export default {
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
+      document.getElementById('temporizador').play()
       if (!this.tiempoNulo(obj.tiempo)) {
         this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
@@ -299,6 +312,7 @@ export default {
       if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
         obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
       }
+      document.getElementById('temporizador').play()
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
@@ -328,17 +342,11 @@ export default {
           obj.iteraciones--
           obj.audioActivo = true
           setTimeout(() => {
-            document.getElementById(obj.audioNombre).play()
-          }, 50)
-          setTimeout(() => {
             obj.audioActivo = false
           }, 1000)
           this.reiniciarValores(obj)
         } else {
           obj.audioActivo = true
-          setTimeout(() => {
-            document.getElementById(obj.audioNombre).play()
-          }, 50)
           setTimeout(() => {
             obj.audioActivo = false
           }, 1000)
