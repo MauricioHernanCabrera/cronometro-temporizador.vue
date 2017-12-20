@@ -36,8 +36,22 @@
     )
       
     app-menu-redes(:opcionApp="opcionApp")
-    app-audio.contenedor(:activo="temporizador.audioActivo")
-    app-audio.contenedor(:activo="manual.audioActivo")
+    //- app-audio.contenedor(:activo="temporizador.audioActivo")
+    //- app-audio.contenedor(:activo="manual.audioActivo")
+
+    audio(
+      :id="temporizador.audioNombre" 
+      v-if="temporizador.audioActivo" 
+      src="src/assets/alarma.mp3" 
+      type="audio/mpeg" 
+      controls
+    )
+    //- audio(
+    //-   src="src/assets/alarma.mp3" 
+    //-   type="audio/mpeg" 
+    //-   controls
+    //- )
+    //- button(@click="activarAudio") Activar
 </template>
 
 <script>
@@ -54,6 +68,8 @@ export default {
   components: { AppAudio, AppMenuRedes, AppMenuOpciones, AppTemporizador, AppCronometro, AppManual },
   data () {
     return {
+      // audio: 'sonido',
+      // estaActivo: false,
       temporizador: {
         tiempo: {
           hora: 0,
@@ -64,6 +80,7 @@ export default {
         listaDeTiempos: [],
         tiempoActivo: false,
         audioActivo: false,
+        audioNombre: 'temporizador',
         intervalo: null
       },
       cronometro: {
@@ -96,6 +113,14 @@ export default {
     }
   },
   methods: {
+    activarAudio () {
+      this.estaActivo = !this.estaActivo
+      if (this.estaActivo) {
+        setTimeout(() => {
+          document.getElementById(this.audio).play()
+        }, 10)
+      }
+    },
     reiniciarValores (obj) {
       this.inicializarTiempo(obj.tiempo)
       clearInterval(obj.intervalo)
@@ -185,6 +210,9 @@ export default {
       this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
         obj.audioActivo = true
+        setTimeout(() => {
+          document.getElementById(obj.audioNombre).play()
+        }, 10)
         this.reiniciarValores(obj)
       } else {
         if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
