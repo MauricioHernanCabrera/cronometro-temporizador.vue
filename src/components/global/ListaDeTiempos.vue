@@ -54,43 +54,45 @@ export default{
 <style lang="scss">
 .lista-tiempos{
   .item{
-    border-bottom: 7px solid #003133;
+    border-bottom: 7px solid #00393b;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #003133;
     button{
       cursor: pointer;
-      box-shadow: 4px 4px 2px #003133;
       transition: .1s;
+      display: inline-block;
     }
     button:active{
       transform: scale(0.95);
-      box-shadow: 0px 0px 0px #003133;
     }
     .contenedor-btn-texto{
       display: flex;
       align-items: center;
       .btn-agregar{
-        padding: 10px 20px;
-        margin: 10px;
-        font-size: 1em;
+        height: 80px;
+        width: 100px;
+        font-size: 1.2em;
         font-weight: 700;
-        background: #31a5bd;
         color: #fef7f4;
+        background: #002426;
       }
       .texto{
         font-size: 1em;
         letter-spacing: 2px;
+        margin-left: 10px;
       }
     }
     .btn-eliminar{
-      background: #7b2d26;
+      background: #002426;
       color: #fef7f4;
       font-size: 0.7em;
-      padding: 8px 15px;
+      height: 50px;
+      width: 150px;
+      margin-right: 10px;
       font-weight: 600;
       letter-spacing: 1px;
-      margin: 10px;
     }
   }
   .item:last-child{
@@ -100,14 +102,20 @@ export default{
 @media (max-width: 525px){
   .lista-tiempos{
     .item{
+      border-bottom: 5.6px solid #00393b;
       .contenedor-btn-texto{
         .btn-agregar{
-          padding: 8px 16px;
-          margin: 8px;
+          height: 64px;
+          width: 80px;
+        }
+        .texto{
+          margin-left: 8px;
         }
       }
       .btn-eliminar{
-        padding: 8px 12px;
+        height: 40px;
+        width: 120px;
+        margin-right: 8px;
       }
     }
   }
@@ -115,14 +123,22 @@ export default{
 @media (max-width: 425px){
   .lista-tiempos{
     .item{
+      border-bottom: 4.48px solid #00393b;
       .contenedor-btn-texto{
         .btn-agregar{
-          padding: 6.4px 12.8px;
-          margin: 6.4px;
+          height: 51.2px;
+          width: 64px;
+        }
+        .texto{
+          letter-spacing: 0.5px;
+          margin-left: 6.4px;
         }
       }
       .btn-eliminar{
-        padding: 6.4px 9.6px;
+        height: 32px;
+        width: 96px;
+        margin-right: 6.4px;
+        letter-spacing: 0;
       }
     }
   }

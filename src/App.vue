@@ -3,6 +3,7 @@
     app-menu-opciones(
       :opcionApp="opcionApp"
       @cambiar="cambiarApp"
+      @fullscreen="fullScreen"
     )
     
     app-temporizador(
@@ -57,15 +58,12 @@ import AppTemporizador from './components/padre/Temporizador'
 import AppCronometro from './components/padre/Cronometro'
 import AppManual from './components/padre/Manual'
 import AppMenuRedes from './components/padre/MenuRedes'
-import AppAudio from './components/padre/Audio'
 
 export default {
   name: 'app',
-  components: { AppAudio, AppMenuRedes, AppMenuOpciones, AppTemporizador, AppCronometro, AppManual },
+  components: { AppMenuRedes, AppMenuOpciones, AppTemporizador, AppCronometro, AppManual },
   data () {
     return {
-      // audio: 'sonido',
-      // estaActivo: false,
       temporizador: {
         tiempo: {
           hora: 0,
@@ -115,18 +113,6 @@ export default {
     this.temporizador.audioID = document.getElementById('temporizador')
     this.manual.audioID = document.getElementById('manual')
   },
-  watch: {
-    'manual.audioActivo' () {
-      if (this.manual.audioActivo) {
-        this.manual.audioID.play()
-      }
-    },
-    'temporizador.audioActivo' () {
-      if (this.temporizador.audioActivo) {
-        this.temporizador.audioID.play()
-      }
-    }
-  },
   methods: {
     reiniciarValores (obj) {
       this.inicializarTiempo(obj.tiempo)
@@ -137,14 +123,15 @@ export default {
       obj.tiempoActivo = !obj.tiempoActivo
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
+      // Solucion al problema de celulares
       obj.audioID.play()
       obj.audioID.pause()
+      // ---------------------------------
       if (!this.tiempoNulo(obj.tiempo)) {
         this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
-          const self = this
-          obj.intervalo = setInterval(function () {
-            self.reducirValores(obj)
+          obj.intervalo = setInterval(() => {
+            this.reducirValores(obj)
           }, 100)
         } else {
           clearInterval(obj.intervalo)
@@ -154,19 +141,124 @@ export default {
         obj.tiempoActivo = !obj.tiempoActivo
       }
     },
+    reducirValores (obj) {
+      this.convertirAEntero(obj.tiempo)
+      if (this.tiempoNulo(obj.tiempo)) {
+        obj.audioActivo = true
+        obj.audioID.play()
+        this.reiniciarValores(obj)
+      } else {
+        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.hora--
+          obj.tiempo.minuto = 60
+        }
+        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.minuto--
+          obj.tiempo.segundo = 60
+        }
+        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
+          obj.tiempo.segundo--
+          obj.tiempo.milisegundo = 10
+        }
+        obj.tiempo.milisegundo--
+        this.convertirADosDigitos(obj.tiempo)
+      }
+    },
     incrementarTiempo (obj) {
       obj.tiempoActivo = !obj.tiempoActivo
       this.convertirAEntero(obj.tiempo)
       this.convertirADosDigitos(obj.tiempo)
       if (obj.tiempoActivo) {
-        const self = this
-        obj.intervalo = setInterval(function () {
-          self.incrementarValores(obj)
+        obj.intervalo = setInterval(() => {
+          this.incrementarValores(obj)
         }, 100)
       } else {
         this.convertirAEntero(obj.tiempo)
         this.convertirADosDigitos(obj.tiempo)
         clearInterval(obj.intervalo)
+      }
+    },
+    incrementarValores (obj) {
+      this.convertirAEntero(obj.tiempo)
+      obj.tiempo.milisegundo++
+      if (obj.tiempo.milisegundo === 10) {
+        obj.tiempo.segundo++
+        obj.tiempo.milisegundo = 0
+      }
+      if (obj.tiempo.segundo === 60) {
+        obj.tiempo.minuto++
+        obj.tiempo.segundo = 0
+      }
+      if (obj.tiempo.minuto === 60) {
+        obj.tiempo.hora++
+        obj.tiempo.minuto = 0
+      }
+      this.convertirADosDigitos(obj.tiempo)
+    },
+    iniciarManual (obj) {
+      if (obj.listaDeTiemposTotal.length === 0) {
+        this.armarArregloDeTiemposTotales(obj)
+      }
+      if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
+        obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
+      }
+      // Solucion al problema de celulares
+      obj.audioID.play()
+      obj.audioID.pause()
+      // ----------------------------------
+      obj.tiempoActivo = !obj.tiempoActivo
+      obj.audioActivo = false
+      this.convertirAEntero(obj.tiempo)
+      if (!this.tiempoNulo(obj.tiempo)) {
+        this.convertirADosDigitos(obj.tiempo)
+        if (obj.tiempoActivo) {
+          obj.intervalo = setInterval(() => {
+            this.reducirValoresManual(obj)
+          }, 100)
+        } else {
+          clearInterval(obj.intervalo)
+        }
+      } else {
+        this.convertirADosDigitos(obj.tiempo)
+        obj.tiempoActivo = !obj.tiempoActivo
+      }
+    },
+    reducirValoresManual (obj) {
+      this.convertirAEntero(obj.tiempo)
+      if (this.tiempoNulo(obj.tiempo)) {
+        obj.listaDeTiemposTotal.shift()
+        if (obj.listaDeTiemposTotal.length === 0) {
+          obj.iteraciones--
+          obj.audioActivo = true
+          setTimeout(() => {
+            obj.audioActivo = false
+          }, 1000)
+          this.reiniciarValores(obj)
+        } else {
+          obj.audioActivo = true
+          setTimeout(() => {
+            obj.audioActivo = false
+          }, 1000)
+          obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
+          if (obj.listaDeTiemposTotal.length % obj.listaDeTiempos.length === 0) {
+            obj.iteraciones--
+          }
+        }
+      } else {
+        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.hora--
+          obj.tiempo.minuto = 60
+        }
+        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
+          obj.tiempo.minuto--
+          obj.tiempo.segundo = 60
+        }
+        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
+          obj.tiempo.segundo--
+          obj.tiempo.milisegundo = 10
+        }
+        obj.tiempo.milisegundo--
+        this.convertirADosDigitos(obj.tiempo)
       }
     },
     agregarALista (obj, opts) {
@@ -215,46 +307,6 @@ export default {
         obj.tiempo.milisegundo = nuevoTiempo.milisegundo
       }
     },
-    reducirValores (obj) {
-      this.convertirAEntero(obj.tiempo)
-      if (this.tiempoNulo(obj.tiempo)) {
-        obj.audioActivo = true
-        obj.audioID.play()
-        this.reiniciarValores(obj)
-      } else {
-        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
-          obj.tiempo.hora--
-          obj.tiempo.minuto = 60
-        }
-        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
-          obj.tiempo.minuto--
-          obj.tiempo.segundo = 60
-        }
-        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
-          obj.tiempo.segundo--
-          obj.tiempo.milisegundo = 10
-        }
-        obj.tiempo.milisegundo--
-        this.convertirADosDigitos(obj.tiempo)
-      }
-    },
-    incrementarValores (obj) {
-      this.convertirAEntero(obj.tiempo)
-      obj.tiempo.milisegundo++
-      if (obj.tiempo.milisegundo === 10) {
-        obj.tiempo.segundo++
-        obj.tiempo.milisegundo = 0
-      }
-      if (obj.tiempo.segundo === 60) {
-        obj.tiempo.minuto++
-        obj.tiempo.segundo = 0
-      }
-      if (obj.tiempo.minuto === 60) {
-        obj.tiempo.hora++
-        obj.tiempo.minuto = 0
-      }
-      this.convertirADosDigitos(obj.tiempo)
-    },
     tiempoNulo (tiempo) {
       if (tiempo.hora === 0 && parseInt(tiempo.minuto) === 0 && parseInt(tiempo.segundo) === 0 && tiempo.milisegundo === 0) {
         return true
@@ -293,75 +345,8 @@ export default {
       obj.intervalo = null
       obj.iteraciones = 1
     },
-    iniciarManual (obj) {
-      if (obj.listaDeTiemposTotal.length === 0) {
-        this.armarArregloDeTiemposTotales(obj)
-      }
-      if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
-        obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
-      }
-      // Solucion al problema de celulares
-      obj.audioID.play()
-      obj.audioID.pause()
-      // ----------------------------------
-      obj.tiempoActivo = !obj.tiempoActivo
-      obj.audioActivo = false
-      this.convertirAEntero(obj.tiempo)
-      if (!this.tiempoNulo(obj.tiempo)) {
-        this.convertirADosDigitos(obj.tiempo)
-        if (obj.tiempoActivo) {
-          const self = this
-          obj.intervalo = setInterval(function () {
-            self.reducirValoresManual(obj)
-          }, 100)
-        } else {
-          clearInterval(obj.intervalo)
-        }
-      } else {
-        this.convertirADosDigitos(obj.tiempo)
-        obj.tiempoActivo = !obj.tiempoActivo
-      }
-    },
     clonarObjeto (obj) {
       return Object.assign({}, obj)
-    },
-    reducirValoresManual (obj) {
-      this.convertirAEntero(obj.tiempo)
-      if (this.tiempoNulo(obj.tiempo)) {
-        obj.listaDeTiemposTotal.shift()
-        if (obj.listaDeTiemposTotal.length === 0) {
-          obj.iteraciones--
-          obj.audioActivo = true
-          setTimeout(() => {
-            obj.audioActivo = false
-          }, 1000)
-          this.reiniciarValores(obj)
-        } else {
-          obj.audioActivo = true
-          setTimeout(() => {
-            obj.audioActivo = false
-          }, 1000)
-          obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
-          if (obj.listaDeTiemposTotal.length % obj.listaDeTiempos.length === 0) {
-            obj.iteraciones--
-          }
-        }
-      } else {
-        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
-          obj.tiempo.hora--
-          obj.tiempo.minuto = 60
-        }
-        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
-          obj.tiempo.minuto--
-          obj.tiempo.segundo = 60
-        }
-        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
-          obj.tiempo.segundo--
-          obj.tiempo.milisegundo = 10
-        }
-        obj.tiempo.milisegundo--
-        this.convertirADosDigitos(obj.tiempo)
-      }
     },
     armarArregloDeTiemposTotales (obj) {
       const cantElementos = obj.iteraciones * obj.listaDeTiempos.length
@@ -369,6 +354,35 @@ export default {
       for (let i = 0; i < cantElementos; i++) {
         const indice = i % longitudDeListaDeTiempos
         obj.listaDeTiemposTotal.push(this.clonarObjeto(obj.listaDeTiempos[indice]))
+      }
+    },
+    fullScreen (opcion) {
+      console.log('hola')
+      console.log(opcion)
+      if (opcion === 3) {
+        const doc = window.document
+        const docEl = doc.documentElement
+        const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen
+        const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen
+        if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+          requestFullScreen.call(docEl)
+        } else {
+          cancelFullScreen.call(doc)
+        }
+      }
+    }
+  },
+  watch: {
+    'temporizador.audioActivo' () {
+      if (this.temporizador.audioActivo) {
+        this.temporizador.audioID.currentTime = 0
+        this.temporizador.audioID.play()
+      }
+    },
+    'manual.audioActivo' () {
+      if (this.manual.audioActivo) {
+        this.manual.audioID.currentTime = 0
+        this.manual.audioID.play()
       }
     }
   }
@@ -393,6 +407,7 @@ body{
   font-family: sans-serif;
   background: #00393b;
   color: #fef7f4;
+  min-height: 100vh;
 }
 .contenedor{
   max-width: 700px;

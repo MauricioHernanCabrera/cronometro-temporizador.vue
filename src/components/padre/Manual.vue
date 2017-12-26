@@ -1,5 +1,9 @@
 <template lang="pug">
   div(v-show="opcionApp === 3")
+    app-tiempo.contenedor(
+      :tiempo="obj.tiempo"
+      :activo="obj.tiempoActivo || !obj.tiempoActivo"
+    )
     app-botones.contenedor(
       :tiempoActivo="obj.tiempoActivo"
       :obj="obj"
@@ -7,10 +11,6 @@
       @reiniciar="inicializarValoresManual"
       @iniciar="iniciarManual"
       @agregar="activarAgregarTiempo"
-    )
-    app-tiempo.contenedor(
-      :tiempo="obj.tiempo"
-      :activo="obj.tiempoActivo || !obj.tiempoActivo"
     )
     app-iteraciones.contenedor(
       :obj="obj"

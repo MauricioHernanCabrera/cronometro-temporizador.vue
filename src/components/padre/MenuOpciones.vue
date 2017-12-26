@@ -7,7 +7,7 @@
     li(:class="{'opcion-activo': opcionApp === 3 }" @click="cambiarApp(3)")
       button.icon.icon-hammer
     li(:class="{'opcion-activo': opcionApp === 4 }" @click="cambiarApp(4)")
-      button.icon.icon-man
+      button.icon.icon-man(@click="fullScreen")
 </template>
 
 <script>
@@ -18,6 +18,9 @@ export default{
   methods: {
     cambiarApp (opcion) {
       this.$emit('cambiar', opcion)
+    },
+    fullScreen () {
+      this.$emit('fullscreen', this.opcionApp)
     }
   }
 }
