@@ -2,10 +2,10 @@
   #app
     app-menu-opciones(
       :opcionApp="opcionApp"
+      :fullScreen="estaFullScreen"
       @cambiar="cambiarApp"
-      @fullscreen="fullScreen"
+      @fullscreen="cambiarFullScreen"
     )
-    
     app-temporizador(
       :opcionApp="opcionApp"
       :obj="temporizador"
@@ -106,7 +106,8 @@ export default {
         audioID: null,
         iteraciones: 1
       },
-      opcionApp: 1
+      opcionApp: 1,
+      estaFullScreen: false
     }
   },
   mounted () {
@@ -263,9 +264,10 @@ export default {
     },
     agregarALista (obj, opts) {
       let max = 0
-      let auxTiempoActivo = obj.tiempoActivo
+      let auxTiempoActivo
       if (opts === 1 || opts === 3) {
         max = 5
+        auxTiempoActivo = obj.tiempoActivo
       } else {
         max = 50
         auxTiempoActivo = false
@@ -356,19 +358,16 @@ export default {
         obj.listaDeTiemposTotal.push(this.clonarObjeto(obj.listaDeTiempos[indice]))
       }
     },
-    fullScreen (opcion) {
-      console.log('hola')
-      console.log(opcion)
-      if (opcion === 3) {
-        const doc = window.document
-        const docEl = doc.documentElement
-        const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen
-        const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen
-        if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-          requestFullScreen.call(docEl)
-        } else {
-          cancelFullScreen.call(doc)
-        }
+    cambiarFullScreen () {
+      this.estaFullScreen = !this.estaFullScreen
+      const doc = window.document
+      const docEl = doc.documentElement
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(docEl)
+      } else {
+        cancelFullScreen.call(doc)
       }
     }
   },

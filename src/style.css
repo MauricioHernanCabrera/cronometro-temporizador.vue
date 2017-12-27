@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?l1kj1d');
-  src:  url('fonts/icomoon.eot?l1kj1d#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?l1kj1d') format('truetype'),
-    url('fonts/icomoon.woff?l1kj1d') format('woff'),
-    url('fonts/icomoon.svg?l1kj1d#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?5my6u0');
+  src:  url('fonts/icomoon.eot?5my6u0#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?5my6u0') format('truetype'),
+    url('fonts/icomoon.woff?5my6u0') format('woff'),
+    url('fonts/icomoon.svg?5my6u0#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -30,36 +30,24 @@
 .icon-hour-glass:before {
   content: "\e979";
 }
+.icon-enlarge:before {
+  content: "\e989";
+}
+.icon-shrink:before {
+  content: "\e98a";
+}
 .icon-lock:before {
   content: "\e98f";
 }
 .icon-unlocked:before {
   content: "\e990";
 }
-.icon-wrench:before {
-  content: "\e991";
+.icon-cog:before {
+  content: "\e994";
 }
 .icon-hammer:before {
   content: "\e996";
 }
-.icon-accessibility:before {
-  content: "\e9b2";
-}
 .icon-man:before {
   content: "\e9dc";
-}
-.icon-facebook:before {
-  content: "\ea90";
-}
-.icon-facebook2:before {
-  content: "\ea91";
-}
-.icon-instagram:before {
-  content: "\ea92";
-}
-.icon-twitter:before {
-  content: "\ea96";
-}
-.icon-github:before {
-  content: "\eab0";
 }

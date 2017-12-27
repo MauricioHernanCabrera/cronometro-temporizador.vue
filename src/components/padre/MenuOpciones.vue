@@ -1,26 +1,34 @@
 <template lang="pug">
   ul.menu
-    li(:class="{'opcion-activo': opcionApp === 1 }" @click="cambiarApp(1)")
-      button.icon.icon-hour-glass
-    li(:class="{'opcion-activo': opcionApp === 2 }" @click="cambiarApp(2)")
-      button.icon.icon-stopwatch
-    li(:class="{'opcion-activo': opcionApp === 3 }" @click="cambiarApp(3)")
-      button.icon.icon-hammer
-    li(:class="{'opcion-activo': opcionApp === 4 }" @click="cambiarApp(4)")
-      button.icon.icon-man(@click="fullScreen")
+    li.opcion(:class="{'opcion-activo': opcionApp === 1 }")
+      button.icon.icon-hour-glass(@click="cambiarApp(1)")
+    li.opcion(:class="{'opcion-activo': opcionApp === 2 }")
+      button.icon.icon-stopwatch(@click="cambiarApp(2)")
+    li.opcion(:class="{'opcion-activo': opcionApp === 3 }")
+      button.icon.icon-hammer(@click="cambiarApp(3)")
+    li.opcion(:class="{'opcion-activo': opcionApp === 4 }")
+      button.icon.icon-man(@click="cambiarApp(4)")
+    li.opcion(:class="{'opcion-activo': opcionApp === 5 }" )
+      button.icon(
+        :class="(fullScreen)? 'icon-shrink' : 'icon-enlarge'"
+        @click="CambiarFullScreen()"
+      )
+    //- li.opcion(:class="{'opcion-activo': opcionApp === 6 }" )
+    //-   button.icon.icon-unlocked(@click="cambiarApp(6)")
 </template>
 
 <script>
 export default{
   props: {
-    opcionApp: { type: Number, required: true }
+    opcionApp: { type: Number, required: true },
+    fullScreen: { type: Boolean, required: true }
   },
   methods: {
     cambiarApp (opcion) {
       this.$emit('cambiar', opcion)
     },
-    fullScreen () {
-      this.$emit('fullscreen', this.opcionApp)
+    CambiarFullScreen () {
+      this.$emit('fullscreen')
     }
   }
 }
@@ -42,6 +50,8 @@ export default{
     cursor: pointer;
     transition: .3s;
     .icon{
+      height: 100%;
+      width: 100%;
       font-size: 1.2em;
       color: #fff;
       background: none;
