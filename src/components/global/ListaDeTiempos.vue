@@ -8,14 +8,21 @@
           :disabled="obj.tiempoActivo"
         ) {{ indice | convertirAIndice }}
         button.btn-agregar(
-          v-show="opts != 1"
-          @click="agregarAlPrincipal(t)"
-          :disabled="obj.tiempoActivo || !obj.tiempoActivo"
+          v-show="opts == 2"
+          :disabled="opts == 2"
         ) {{ indice | convertirAIndice }}
-        
+        button.btn-agregar(
+          v-show="opts == 3"
+          :disabled="opts == 3"
+        ) {{ indice | convertirAIndice }}
         span.texto {{ t | convertirATiempo }}
+      
       button.btn-eliminar(
-        v-show="opts != 3"
+        v-show="opts == 1"
+        @click="eliminarTiempo(indice)"
+      ) ELIMINAR
+      button.btn-eliminar(
+        v-show="opts == 2"
         @click="eliminarTiempo(indice)"
       ) ELIMINAR
       button.btn-eliminar(
@@ -33,8 +40,8 @@ export default{
     opts: { type: Number, required: true }
   },
   methods: {
-    agregarAlPrincipal (t) {
-      this.$emit('agregar', t, this.obj, this.opts)
+    agregarAlPrincipal (nuevoTiempo) {
+      this.$emit('agregar', nuevoTiempo, this.obj)
     },
     eliminarTiempo (indice) {
       this.$emit('eliminar', indice, this.obj, this.opts)

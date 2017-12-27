@@ -2,7 +2,7 @@
   div(v-show="opcionApp === 2")
     app-tiempo.contenedor(
       :tiempo="obj.tiempo"
-      :activo="(obj.tiempoActivo || !obj.tiempoActivo)"
+      :activo="opcionApp == 2"
     )
     //- aca---------------------------
     app-botones.contenedor(
@@ -17,7 +17,6 @@
       :lista="obj.listaDeTiempos"
       :obj="obj"
       :opts="opcionApp"
-      @agregar="agregarAlPrincipal"
       @eliminar="eliminarTiempo"
     )
 </template>
@@ -37,9 +36,6 @@ export default{
     },
     agregarALista (obj, opts) {
       this.$emit('agregarBtnBotones', obj, opts)
-    },
-    agregarAlPrincipal (t, obj, opts) {
-      this.$emit('agregarBtnLista', t, obj, opts)
     },
     eliminarTiempo (indice, obj, opts) {
       this.$emit('eliminarBtnLista', indice, obj, opts)

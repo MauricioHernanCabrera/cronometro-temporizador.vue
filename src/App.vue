@@ -10,7 +10,7 @@
       :opcionApp="opcionApp"
       :obj="temporizador"
       @reiniciarBtnBotones="reiniciarValores"
-      @iniciarBtnBotones="reducirTiempo"
+      @iniciarBtnBotones="iniciarTemporizador"
       @agregarBtnBotones="agregarALista"
       @agregarBtnLista="agregarAlPrincipal"
       @eliminarBtnLista="eliminarTiempo"
@@ -19,9 +19,8 @@
       :opcionApp="opcionApp"
       :obj="cronometro"
       @reiniciarBtnBotones="reiniciarValores"
-      @iniciarBtnBotones="incrementarTiempo"
+      @iniciarBtnBotones="iniciarCronometro"
       @agregarBtnBotones="agregarALista"
-      @agregarBtnLista="agregarAlPrincipal"
       @eliminarBtnLista="eliminarTiempo"
     )
     app-manual(
@@ -32,11 +31,11 @@
       @agregarBtnBotones="activarAgregarTiempo"
       @agregarBtnNuevoTiempo="agregarALista"
       @cancelarBtnNuevoTiempo="cancelarTiempo"
-      @agregarBtnLista="agregarAlPrincipal"
       @eliminarBtnLista="eliminarTiempo"
     )
       
     app-menu-redes(:opcionApp="opcionApp")
+    
     audio(
       :id="temporizador.audioNombre" 
       src="src/assets/alarma.mp3" 
@@ -120,19 +119,19 @@ export default {
       clearInterval(obj.intervalo)
       obj.tiempoActivo = false
     },
-    reducirTiempo (obj) {
-      obj.tiempoActivo = !obj.tiempoActivo
+    iniciarTemporizador (obj) {
       obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
       // Solucion al problema de celulares
       obj.audioID.play()
       obj.audioID.pause()
       // ---------------------------------
+      obj.tiempoActivo = !obj.tiempoActivo
       if (!this.tiempoNulo(obj.tiempo)) {
         this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
           obj.intervalo = setInterval(() => {
-            this.reducirValores(obj)
+            this.reducirElTiempo(obj)
           }, 100)
         } else {
           clearInterval(obj.intervalo)
@@ -142,7 +141,7 @@ export default {
         obj.tiempoActivo = !obj.tiempoActivo
       }
     },
-    reducirValores (obj) {
+    reducirElTiempo (obj) {
       this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
         obj.audioActivo = true
@@ -165,13 +164,13 @@ export default {
         this.convertirADosDigitos(obj.tiempo)
       }
     },
-    incrementarTiempo (obj) {
+    iniciarCronometro (obj) {
       obj.tiempoActivo = !obj.tiempoActivo
       this.convertirAEntero(obj.tiempo)
       this.convertirADosDigitos(obj.tiempo)
       if (obj.tiempoActivo) {
         obj.intervalo = setInterval(() => {
-          this.incrementarValores(obj)
+          this.incrementarTiempo(obj)
         }, 100)
       } else {
         this.convertirAEntero(obj.tiempo)
@@ -179,7 +178,7 @@ export default {
         clearInterval(obj.intervalo)
       }
     },
-    incrementarValores (obj) {
+    incrementarTiempo (obj) {
       this.convertirAEntero(obj.tiempo)
       obj.tiempo.milisegundo++
       if (obj.tiempo.milisegundo === 10) {
@@ -214,7 +213,7 @@ export default {
         this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
           obj.intervalo = setInterval(() => {
-            this.reducirValoresManual(obj)
+            this.reducirTiempoManual(obj)
           }, 100)
         } else {
           clearInterval(obj.intervalo)
@@ -224,7 +223,7 @@ export default {
         obj.tiempoActivo = !obj.tiempoActivo
       }
     },
-    reducirValoresManual (obj) {
+    reducirTiempoManual (obj) {
       this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
         obj.listaDeTiemposTotal.shift()
@@ -263,50 +262,53 @@ export default {
       }
     },
     agregarALista (obj, opts) {
-      let max = 0
-      let auxTiempoActivo
-      if (opts === 1 || opts === 3) {
-        max = 5
-        auxTiempoActivo = obj.tiempoActivo
-      } else {
-        max = 50
-        auxTiempoActivo = false
-      }
-      if ((!auxTiempoActivo) && (!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < max) {
-        this.convertirAEntero(obj.tiempo)
-        const aux = {
-          hora: obj.tiempo.hora,
-          minuto: (obj.tiempo.minuto < 10) ? '0' + obj.tiempo.minuto : obj.tiempo.minuto,
-          segundo: (obj.tiempo.segundo < 10) ? '0' + obj.tiempo.segundo : obj.tiempo.segundo,
-          milisegundo: obj.tiempo.milisegundo
-        }
-        if (opts === 1) {
-          obj.listaDeTiempos.push(aux)
+      const MAX = 50
+      this.convertirAEntero(obj.tiempo)
+      if (opts === 1) {
+        // Temporizador
+        if ((!obj.tiempoActivo) && (!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
+          this.convertirADosDigitos(obj.tiempo)
+          const clon = this.clonarObjeto(obj.tiempo)
+          obj.listaDeTiempos.push(clon)
           this.reiniciarValores(obj)
-        } else if (opts === 2) {
-          obj.listaDeTiempos.unshift(aux)
         } else {
+          this.convertirADosDigitos(obj.tiempo)
+        }
+      } else if (opts === 2) {
+        // Cronometro
+        if ((!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
+          this.convertirADosDigitos(obj.tiempo)
+          const clon = this.clonarObjeto(obj.tiempo)
+          obj.listaDeTiempos.unshift(clon)
+        } else {
+          this.convertirADosDigitos(obj.tiempo)
+        }
+      } else {
+        // Manual
+        if ((!obj.tiempoActivo) && (!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
+          this.convertirADosDigitos(obj.tiempo)
+          const clon = this.clonarObjeto(obj.tiempo)
           obj.listaDeTiemposTotal = []
-          obj.listaDeTiempos.push(aux)
+          obj.listaDeTiempos.push(clon)
           this.reiniciarValores(obj)
           this.cancelarTiempo(obj)
+        } else {
+          this.convertirADosDigitos(obj.tiempo)
         }
       }
     },
     eliminarTiempo (indice, obj, opts) {
       obj.listaDeTiempos.splice(indice, 1)
+      // Si es Manual se reinician sus valores
       if (opts === 3) {
         obj.listaDeTiemposTotal = []
         obj.intervalo = null
         this.inicializarTiempo(obj.tiempo)
       }
     },
-    agregarAlPrincipal (nuevoTiempo, obj, opts) {
-      if (!obj.tiempoActivo && opts === 1) {
-        obj.tiempo.hora = nuevoTiempo.hora
-        obj.tiempo.minuto = nuevoTiempo.minuto
-        obj.tiempo.segundo = nuevoTiempo.segundo
-        obj.tiempo.milisegundo = nuevoTiempo.milisegundo
+    agregarAlPrincipal (nuevoTiempo, obj) {
+      if (!obj.tiempoActivo) {
+        obj.tiempo = this.clonarObjeto(nuevoTiempo)
       }
     },
     tiempoNulo (tiempo) {
@@ -344,8 +346,8 @@ export default {
       obj.listaDeTiempos = []
       obj.listaDeTiemposTotal = []
       this.inicializarTiempo(obj.tiempo)
-      obj.intervalo = null
       obj.iteraciones = 1
+      clearInterval(obj.intervalo)
     },
     clonarObjeto (obj) {
       return Object.assign({}, obj)
