@@ -1,6 +1,6 @@
-# platzi-music
+# cronometro-temporizador
 
-> App curso de Vue.js Platzi
+> App construida con vue.js
 
 ## Build Setup
 
