@@ -5,18 +5,14 @@
       button(@click="reducirTiempo") {{ tiempoActivo | mostrarTextoCorrespondiente }}
     .secundarios
       button(
-        v-show="opts == 1"
-        @click="agregarALista" 
-      ) AGREGAR
-      button(
-        v-show="opts == 2"
-        @click="agregarALista"
-      ) AGREGAR
-      button(
-        v-show="opts == 3"
+        v-if="opts == 3"
         @click="agregarALista" 
         :disabled="obj.tiempoActivo"
       ) NUEVO
+      button(
+        v-else
+        @click="agregarALista" 
+      ) AGREGAR
 </template>
 
 <script>
@@ -34,7 +30,7 @@ export default{
       this.$emit('iniciar', this.obj)
     },
     agregarALista () {
-      this.$emit('agregar', this.obj, this.opts)
+      this.$emit('agregar', this.obj)
     }
   },
   filters: {

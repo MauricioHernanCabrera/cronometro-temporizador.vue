@@ -1,33 +1,27 @@
 <template lang="pug">
   ul.menu
-    li.opcion(:class="{'opcion-activo': opcionApp === 1 }")
-      button.icon.icon-hour-glass(@click="cambiarApp(1)")
-    li.opcion(:class="{'opcion-activo': opcionApp === 2 }")
-      button.icon.icon-stopwatch(@click="cambiarApp(2)")
-    li.opcion(:class="{'opcion-activo': opcionApp === 3 }")
-      button.icon.icon-hammer(@click="cambiarApp(3)")
-    li.opcion(:class="{'opcion-activo': opcionApp === 4 }")
-      button.icon.icon-man(@click="cambiarApp(4)")
-    li.opcion(:class="{'opcion-activo': opcionApp === 5 }" )
+    li.opcion
+      router-link.icon.icon-hour-glass(to="/")
+    li.opcion
+      router-link.icon.icon-stopwatch(to="cronometro")
+    li.opcion
+      router-link.icon.icon-hammer(to="manual")
+    li.opcion
+      router-link.icon.icon-man(to="redes-sociales")
+    li.opcion
       button.icon(
         :class="(fullScreen)? 'icon-shrink' : 'icon-enlarge'"
-        @click="CambiarFullScreen()"
+        @click="cambiarFullScreen()"
       )
-    //- li.opcion(:class="{'opcion-activo': opcionApp === 6 }" )
-    //-   button.icon.icon-unlocked(@click="cambiarApp(6)")
 </template>
 
 <script>
 export default{
   props: {
-    opcionApp: { type: Number, required: true },
     fullScreen: { type: Boolean, required: true }
   },
   methods: {
-    cambiarApp (opcion) {
-      this.$emit('cambiar', opcion)
-    },
-    CambiarFullScreen () {
+    cambiarFullScreen () {
       this.$emit('fullscreen')
     }
   }
@@ -50,20 +44,22 @@ export default{
     cursor: pointer;
     transition: .3s;
     .icon{
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100%;
       width: 100%;
       font-size: 1.2em;
       color: #fff;
       background: none;
       cursor: pointer;
+      text-decoration: none;
+      transition: .3s;
+    }
+    .icon:hover{
+      background: #002426;
     }
   }
-  .icon:last-child{
-    border-right: 0;
-  }
-}
-.opcion-activo{
-  background: #002426;
 }
 @media (max-width: 525px){
   .menu{

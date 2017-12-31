@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(v-show="opcionApp === 4")
+  main
     ul.redes.contenedor
       li: a.icon(
         href="https://www.facebook.com/Hmc97"
@@ -22,14 +22,6 @@
       )
         span.texto Github
 </template>
-
-<script>
-  export default{
-    props: {
-      opcionApp: { type: Number }
-    }
-  }
-</script>
 
 <style lang="scss">
 .redes{

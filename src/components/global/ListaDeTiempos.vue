@@ -3,32 +3,24 @@
     li.item(v-for="(t, indice) in lista")
       .contenedor-btn-texto
         button.btn-agregar(
-          v-show="opts == 1"
+          v-if="opts == 1"
           @click="agregarAlPrincipal(t)"
           :disabled="obj.tiempoActivo"
         ) {{ indice | convertirAIndice }}
         button.btn-agregar(
-          v-show="opts == 2"
-          :disabled="opts == 2"
-        ) {{ indice | convertirAIndice }}
-        button.btn-agregar(
-          v-show="opts == 3"
-          :disabled="opts == 3"
+          v-else
+          disabled
         ) {{ indice | convertirAIndice }}
         span.texto {{ t | convertirATiempo }}
       
       button.btn-eliminar(
-        v-show="opts == 1"
-        @click="eliminarTiempo(indice)"
-      ) ELIMINAR
-      button.btn-eliminar(
-        v-show="opts == 2"
-        @click="eliminarTiempo(indice)"
-      ) ELIMINAR
-      button.btn-eliminar(
-        v-show="opts == 3"
+        v-if="opts == 3"
         @click="eliminarTiempo(indice)"
         :disabled="obj.tiempoActivo"
+      ) ELIMINAR
+      button.btn-eliminar(
+        v-else
+        @click="eliminarTiempo(indice)"
       ) ELIMINAR
 </template>
 
@@ -44,7 +36,7 @@ export default{
       this.$emit('agregar', nuevoTiempo, this.obj)
     },
     eliminarTiempo (indice) {
-      this.$emit('eliminar', indice, this.obj, this.opts)
+      this.$emit('eliminar', indice, this.obj)
     }
   },
   filters: {
@@ -52,7 +44,7 @@ export default{
       return tiempo.hora + ':' + tiempo.minuto + ':' + tiempo.segundo + '.' + tiempo.milisegundo
     },
     convertirAIndice (indice) {
-      return '#' + (indice + 1)
+      return (indice + 1)
     }
   }
 }
