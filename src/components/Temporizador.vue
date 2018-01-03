@@ -28,7 +28,9 @@
 </template>
  
 <script>
+import FuncionesCompartidas from './../mixins/funcionesCompartidas'
 export default {
+  mixins: [ FuncionesCompartidas ],
   data () {
     return {
       temporizador: {
@@ -40,7 +42,6 @@ export default {
         },
         listaDeTiempos: [],
         tiempoActivo: false,
-        audioActivo: false,
         audioNombre: 'temporizador',
         audioID: null,
         intervalo: null
@@ -52,13 +53,7 @@ export default {
     this.$bus.$emit('app-seleccionada', this.opcionApp)
   },
   methods: {
-    reiniciarValores (obj) {
-      this.inicializarTiempo(obj.tiempo)
-      clearInterval(obj.intervalo)
-      obj.tiempoActivo = false
-    },
     iniciarTemporizador (obj) {
-      obj.audioActivo = false
       this.convertirAEntero(obj.tiempo)
       // Solucion al problema de celulares
       if (obj.audioID === null) {
@@ -85,7 +80,7 @@ export default {
     reducirElTiempo (obj) {
       this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
-        obj.audioActivo = true
+        this.iniciarAudio(obj)
         this.iniciarAudio(obj)
         this.reiniciarValores(obj)
       } else {
@@ -124,37 +119,6 @@ export default {
     },
     eliminarTiempo (indice, obj) {
       obj.listaDeTiempos.splice(indice, 1)
-    },
-    inicializarTiempo (tiempo) {
-      tiempo.hora = tiempo.milisegundo = 0
-      tiempo.minuto = tiempo.segundo = '00'
-    },
-    convertirAEntero (tiempo) {
-      tiempo.hora = parseInt(tiempo.hora)
-      tiempo.minuto = parseInt(tiempo.minuto)
-      tiempo.segundo = parseInt(tiempo.segundo)
-      tiempo.milisegundo = parseInt(tiempo.milisegundo)
-    },
-    convertirADosDigitos (tiempo) {
-      tiempo.minuto = (tiempo.minuto < 10) ? `0${tiempo.minuto}` : tiempo.minuto
-      tiempo.segundo = (tiempo.segundo < 10) ? `0${tiempo.segundo}` : tiempo.segundo
-    },
-    cambiarApp (opcion) {
-      this.opcionApp = opcion
-    },
-    tiempoNulo (tiempo) {
-      if (tiempo.hora === 0 && parseInt(tiempo.minuto) === 0 && parseInt(tiempo.segundo) === 0 && tiempo.milisegundo === 0) {
-        return true
-      } else {
-        return false
-      }
-    },
-    clonarObjeto (obj) {
-      return Object.assign({}, obj)
-    },
-    iniciarAudio (obj) {
-      obj.audioID.currentTime = 0
-      obj.audioID.play()
     }
   }
 }
