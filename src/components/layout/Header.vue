@@ -1,13 +1,25 @@
 <template lang="pug">
   ul.menu
     li.opcion
-      router-link.icon.icon-hour-glass(to="/")
+      router-link.icon.icon-hour-glass(
+        :class="{ 'esta-seleccionada': opcionAPP === 1 }"
+        to="/"
+      )
     li.opcion
-      router-link.icon.icon-stopwatch(to="cronometro")
+      router-link.icon.icon-stopwatch(
+        :class="{ 'esta-seleccionada': opcionAPP === 2 }"
+        to="cronometro"
+      )
     li.opcion
-      router-link.icon.icon-hammer(to="manual")
+      router-link.icon.icon-hammer(
+        :class="{ 'esta-seleccionada': opcionAPP === 3 }"
+        to="manual"
+      )
     li.opcion
-      router-link.icon.icon-man(to="redes-sociales")
+      router-link.icon.icon-man(
+        :class="{ 'esta-seleccionada': opcionAPP === 4 }"
+        to="redes-sociales"
+      )
     li.opcion
       button.icon(
         :class="(fullScreen)? 'icon-shrink' : 'icon-enlarge'"
@@ -18,7 +30,8 @@
 <script>
 export default{
   props: {
-    fullScreen: { type: Boolean, required: true }
+    fullScreen: { type: Boolean, required: true },
+    opcionAPP: { type: Number, required: true }
   },
   methods: {
     cambiarFullScreen () {
@@ -56,7 +69,7 @@ export default{
       text-decoration: none;
       transition: .3s;
     }
-    .icon:hover{
+    .esta-seleccionada{
       background: #002426;
     }
   }

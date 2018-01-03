@@ -22,7 +22,18 @@
       )
         span.texto Github
 </template>
-
+<script>
+  export default{
+    data () {
+      return {
+        opcionApp: 4
+      }
+    },
+    created () {
+      this.$bus.$emit('app-seleccionada', this.opcionApp)
+    }
+  }
+</script>
 <style lang="scss">
 .redes{
   list-style: none;

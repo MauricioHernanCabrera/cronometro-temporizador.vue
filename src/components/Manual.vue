@@ -63,6 +63,9 @@ export default {
       opcionApp: 3
     }
   },
+  created () {
+    this.$bus.$emit('app-seleccionada', this.opcionApp)
+  },
   mounted () {
     this.manual.audioID = document.getElementById('manual')
   },

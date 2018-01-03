@@ -2,6 +2,7 @@
   #app
     app-header(
       :fullScreen="estaFullScreen"
+      :opcionAPP="opcionAPP"
       @fullscreen="cambiarFullScreen"
     )
     router-view
@@ -17,8 +18,13 @@ export default {
   data () {
     return {
       estaFullScreen: false,
-      opcion: 1
+      opcionAPP: 0
     }
+  },
+  created () {
+    this.$bus.$on('app-seleccionada', (opcionAPP) => {
+      this.opcionAPP = opcionAPP
+    })
   },
   methods: {
     cambiarFullScreen () {
@@ -62,6 +68,7 @@ body{
   max-width: 700px;
   margin: 10px auto;
 }
+
 @media (max-width: 525px){
   body{
     font-size: 25.6px;

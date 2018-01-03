@@ -38,6 +38,9 @@ export default {
       opcionApp: 2
     }
   },
+  created () {
+    this.$bus.$emit('app-seleccionada', this.opcionApp)
+  },
   methods: {
     reiniciarValores (obj) {
       this.inicializarTiempo(obj.tiempo)
