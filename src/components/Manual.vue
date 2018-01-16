@@ -2,12 +2,12 @@
   main
     app-tiempo.contenedor(
       :tiempo="manual.tiempo"
-      :activo="opcionApp == 3"
+      :activo="opcionAPP == 3"
     )
     app-botones.contenedor(
       :tiempoActivo="manual.tiempoActivo"
       :obj="manual"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @reiniciar="inicializarValoresManual"
       @iniciar="iniciarManual"
       @agregar="activarAgregarTiempo"
@@ -17,14 +17,14 @@
     )
     app-nuevo-tiempo(
       :obj="manual"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @agregar="agregarALista"
       @cancelar="cancelarTiempo"
     )
     app-lista-de-tiempos.contenedor(
       :lista="manual.listaDeTiempos"
       :obj="manual"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @eliminar="eliminarTiempo"
     )
     audio(
@@ -39,7 +39,7 @@
 import AppIteraciones from './hijo/Iteraciones'
 import AppNuevoTiempo from './hijo/NuevoTiempo'
 import FuncionesCompartidas from './../mixins/funcionesCompartidas'
-
+import { mapState } from 'vuex'
 export default {
   mixins: [ FuncionesCompartidas ],
   components: { AppIteraciones, AppNuevoTiempo },
@@ -60,12 +60,14 @@ export default {
         audioNombre: 'manual',
         audioID: null,
         iteraciones: 1
-      },
-      opcionApp: 3
+      }
     }
   },
   created () {
-    this.$bus.$emit('app-seleccionada', this.opcionApp)
+    this.$store.commit('setOpcionAPP', 3)
+  },
+  computed: {
+    ...mapState(['opcionAPP'])
   },
   methods: {
     inicializarValoresManual (obj) {

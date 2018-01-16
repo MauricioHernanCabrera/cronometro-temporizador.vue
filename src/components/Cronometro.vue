@@ -2,12 +2,12 @@
   main
     app-tiempo.contenedor(
       :tiempo="cronometro.tiempo"
-      :activo="opcionApp == 2"
+      :activo="opcionAPP == 2"
     )
     app-botones.contenedor(
       :tiempoActivo="cronometro.tiempoActivo"
       :obj="cronometro"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @reiniciar="reiniciarValores"
       @iniciar="iniciarCronometro"
       @agregar="agregarALista"
@@ -15,13 +15,14 @@
     app-lista-de-tiempos.contenedor(
       :lista="cronometro.listaDeTiempos"
       :obj="cronometro"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @eliminar="eliminarTiempo"
     )
 </template>
  
 <script>
 import FuncionesCompartidas from './../mixins/funcionesCompartidas'
+import { mapState } from 'vuex'
 export default {
   mixins: [ FuncionesCompartidas ],
   data () {
@@ -36,12 +37,14 @@ export default {
         listaDeTiempos: [],
         tiempoActivo: false,
         intervalo: null
-      },
-      opcionApp: 2
+      }
     }
   },
   created () {
-    this.$bus.$emit('app-seleccionada', this.opcionApp)
+    this.$store.commit('setOpcionAPP', 2)
+  },
+  computed: {
+    ...mapState(['opcionAPP'])
   },
   methods: {
     iniciarCronometro (obj) {

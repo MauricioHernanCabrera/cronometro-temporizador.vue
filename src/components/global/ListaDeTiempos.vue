@@ -1,27 +1,31 @@
 <template lang="pug">
-  ul.lista-tiempos
-    li.item(v-for="(t, indice) in lista")
-      .contenedor-btn-texto
-        button.btn-agregar(
-          v-if="opts == 1"
-          @click="agregarAlPrincipal(t)"
+  div.lista-tiempos
+    transition-group(name="list" tag="p" class="list-item")
+      li.item(
+        v-for="(t, indice) in lista",
+        :key="t"
+      )
+        .contenedor-btn-texto
+          button.btn-agregar(
+            v-if="opts == 1",
+            @click="agregarAlPrincipal(t)",
+            :disabled="obj.tiempoActivo"
+          ) {{ indice | convertirAIndice }}
+          button.btn-agregar(
+            v-else,
+            disabled
+          ) {{ indice | convertirAIndice }}
+          span.texto {{ t | convertirATiempo }}
+        
+        button.btn-eliminar(
+          v-if="opts == 3",
+          @click="eliminarTiempo(indice)",
           :disabled="obj.tiempoActivo"
-        ) {{ indice | convertirAIndice }}
-        button.btn-agregar(
-          v-else
-          disabled
-        ) {{ indice | convertirAIndice }}
-        span.texto {{ t | convertirATiempo }}
-      
-      button.btn-eliminar(
-        v-if="opts == 3"
-        @click="eliminarTiempo(indice)"
-        :disabled="obj.tiempoActivo"
-      ) ELIMINAR
-      button.btn-eliminar(
-        v-else
-        @click="eliminarTiempo(indice)"
-      ) ELIMINAR
+        ) ELIMINAR
+        button.btn-eliminar(
+          v-else,
+          @click="eliminarTiempo(indice)"
+        ) ELIMINAR
 </template>
 
 <script>
@@ -52,6 +56,7 @@ export default{
 
 <style lang="scss">
 .lista-tiempos{
+  overflow: hidden;
   .item{
     border-bottom: 7px solid #00393b;
     display: flex;
@@ -98,6 +103,14 @@ export default{
     border: 0;
   }
 }
+.list-enter-active, .list-leave-active{
+  transition: transform .3s;
+  background: black;
+}
+.list-enter, .list-leave-to{
+  transform: translateX(100%);
+}
+
 @media (max-width: 525px){
   .lista-tiempos{
     .item{

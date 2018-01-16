@@ -7,7 +7,7 @@
     app-botones.contenedor(
       :tiempoActivo="temporizador.tiempoActivo"
       :obj="temporizador"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @reiniciar="reiniciarValores"
       @iniciar="iniciarTemporizador"
       @agregar="agregarALista"
@@ -15,7 +15,7 @@
     app-lista-de-tiempos.contenedor(
       :lista="temporizador.listaDeTiempos"
       :obj="temporizador"
-      :opts="opcionApp"
+      :opts="opcionAPP"
       @agregar="agregarAlPrincipal"
       @eliminar="eliminarTiempo"
     )
@@ -29,6 +29,7 @@
  
 <script>
 import FuncionesCompartidas from './../mixins/funcionesCompartidas'
+import { mapState } from 'vuex'
 export default {
   mixins: [ FuncionesCompartidas ],
   data () {
@@ -45,12 +46,14 @@ export default {
         audioNombre: 'temporizador',
         audioID: null,
         intervalo: null
-      },
-      opcionApp: 1
+      }
     }
   },
   created () {
-    this.$bus.$emit('app-seleccionada', this.opcionApp)
+    this.$store.commit('setOpcionAPP', 1)
+  },
+  computed: {
+    ...mapState(['opcionAPP'])
   },
   methods: {
     iniciarTemporizador (obj) {

@@ -23,16 +23,15 @@
         span.texto Github
 </template>
 <script>
-  export default{
-    data () {
-      return {
-        opcionApp: 4
-      }
-    },
-    created () {
-      this.$bus.$emit('app-seleccionada', this.opcionApp)
-    }
+import { mapState } from 'vuex'
+export default{
+  created () {
+    this.$store.commit('setOpcionAPP', 4)
+  },
+  computed: {
+    ...mapState(['opcionAPP'])
   }
+}
 </script>
 <style lang="scss">
 .redes{

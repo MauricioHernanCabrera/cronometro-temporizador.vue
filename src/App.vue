@@ -6,27 +6,31 @@
       @fullscreen="cambiarFullScreen"
     )
     router-view
+
 </template>
  
 <script>
 
 import AppHeader from './components/layout/Header'
+import { mapState } from 'vuex'
 
 export default {
   name: 'app',
   components: { AppHeader },
   data () {
     return {
-      estaFullScreen: false,
-      opcionAPP: 0
+      estaFullScreen: false
     }
   },
-  created () {
-    this.$bus.$on('app-seleccionada', (opcionAPP) => {
-      this.opcionAPP = opcionAPP
-    })
+  computed: {
+    ...mapState(['opcionAPP'])
   },
   methods: {
+    incrementar () {
+      this.$store.dispatch('incrementar', {
+        number: 2
+      })
+    },
     cambiarFullScreen () {
       const doc = window.document
       const docEl = doc.documentElement
@@ -45,7 +49,9 @@ export default {
 </script>
 
 <style lang="scss">
-
+button{
+  padding: 10px;
+}
 *{
   box-sizing: border-box;
   margin: 0;
