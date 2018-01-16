@@ -15,7 +15,10 @@
             v-else,
             disabled
           ) {{ indice | convertirAIndice }}
-          span.texto {{ t | convertirATiempo }}
+          span.texto 
+            span {{ t.hora | aDosDigitos }}:
+            span {{ t.minuto | aDosDigitos }}:
+            span {{ t.segundo | aDosDigitos }}
         
         button.btn-eliminar(
           v-if="opts == 3",
@@ -44,8 +47,12 @@ export default{
     }
   },
   filters: {
-    convertirATiempo (tiempo) {
-      return tiempo.hora + ':' + tiempo.minuto + ':' + tiempo.segundo + '.' + tiempo.milisegundo
+    aDosDigitos (tiempo) {
+      if (tiempo <= 9) {
+        return '0' + tiempo
+      } else {
+        return tiempo
+      }
     },
     convertirAIndice (indice) {
       return (indice + 1)

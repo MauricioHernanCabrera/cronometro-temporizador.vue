@@ -1,26 +1,19 @@
 const funcionesCompartidas = {
   methods: {
     reiniciarValores (obj) {
-      this.inicializarTiempo(obj.tiempo)
-      clearInterval(obj.intervalo)
+      this.inicializarTiempo(obj.tiempo, 1)
       obj.tiempoActivo = false
+      clearInterval(obj.intervalo)
     },
-    inicializarTiempo (tiempo) {
-      tiempo.hora = tiempo.milisegundo = 0
-      tiempo.minuto = tiempo.segundo = '00'
-    },
-    convertirAEntero (tiempo) {
-      tiempo.hora = parseInt(tiempo.hora)
-      tiempo.minuto = parseInt(tiempo.minuto)
-      tiempo.segundo = parseInt(tiempo.segundo)
-      tiempo.milisegundo = parseInt(tiempo.milisegundo)
-    },
-    convertirADosDigitos (tiempo) {
-      tiempo.minuto = (tiempo.minuto < 10) ? `0${tiempo.minuto}` : tiempo.minuto
-      tiempo.segundo = (tiempo.segundo < 10) ? `0${tiempo.segundo}` : tiempo.segundo
+    inicializarTiempo (tiempo, opts) {
+      if (opts === 1) {
+        tiempo.hora = tiempo.minuto = tiempo.segundo = 0
+      } else {
+        tiempo.hora = tiempo.minuto = tiempo.segundo = ''
+      }
     },
     tiempoNulo (tiempo) {
-      if (tiempo.hora === 0 && parseInt(tiempo.minuto) === 0 && parseInt(tiempo.segundo) === 0 && tiempo.milisegundo === 0) {
+      if (parseInt(tiempo.hora) === 0 && parseInt(tiempo.minuto) === 0 && parseInt(tiempo.segundo) === 0) {
         return true
       } else {
         return false
@@ -32,6 +25,13 @@ const funcionesCompartidas = {
     iniciarAudio (obj) {
       obj.audioID.currentTime = 0
       obj.audioID.play()
+    },
+    agregarAudio (obj) {
+      if (obj.audioID === null) {
+        obj.audioID = document.getElementById(obj.audioNombre)
+        obj.audioID.play()
+        obj.audioID.pause()
+      }
     }
   }
 }

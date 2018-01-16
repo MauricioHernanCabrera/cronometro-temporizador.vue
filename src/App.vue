@@ -74,7 +74,11 @@ body{
   max-width: 700px;
   margin: 10px auto;
 }
-
+@media (max-width: 750px){
+  .contenedor{
+    margin: 2% auto;
+  }
+}
 @media (max-width: 525px){
   body{
     font-size: 25.6px;
