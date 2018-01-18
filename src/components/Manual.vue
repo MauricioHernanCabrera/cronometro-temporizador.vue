@@ -15,11 +15,10 @@
     app-iteraciones.contenedor(
       :obj="manual"
     )
-    app-nuevo-tiempo(
+    app-modal-nuevo-tiempo(
       :obj="manual"
-      :opts="opcionAPP"
+      @cancelar="cancelarModal"
       @agregar="agregarALista"
-      @cancelar="cancelarTiempo"
     )
     app-lista-de-tiempos.contenedor(
       :lista="manual.listaDeTiempos"
@@ -48,9 +47,8 @@ export default {
       manual: {
         tiempo: {
           hora: 0,
-          minuto: '00',
-          segundo: '00',
-          milisegundo: 0
+          minuto: 0,
+          segundo: 0
         },
         listaDeTiempos: [],
         listaDeTiemposTotal: [],
@@ -91,9 +89,7 @@ export default {
       }
       // ----------------------------------
       obj.tiempoActivo = !obj.tiempoActivo
-      this.convertirAEntero(obj.tiempo)
       if (!this.tiempoNulo(obj.tiempo)) {
-        this.convertirADosDigitos(obj.tiempo)
         if (obj.tiempoActivo) {
           obj.intervalo = setInterval(() => {
             this.reducirTiempoManual(obj)
@@ -102,7 +98,6 @@ export default {
           clearInterval(obj.intervalo)
         }
       } else {
-        this.convertirADosDigitos(obj.tiempo)
         obj.tiempoActivo = !obj.tiempoActivo
       }
     },
@@ -115,7 +110,6 @@ export default {
       }
     },
     reducirTiempoManual (obj) {
-      this.convertirAEntero(obj.tiempo)
       if (this.tiempoNulo(obj.tiempo)) {
         obj.listaDeTiemposTotal.shift()
         if (obj.listaDeTiemposTotal.length === 0) {
@@ -130,34 +124,25 @@ export default {
           }
         }
       } else {
-        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0 && obj.tiempo.milisegundo === 0) {
+        if (obj.tiempo.minuto === 0 && obj.tiempo.hora > 0 && obj.tiempo.segundo === 0) {
           obj.tiempo.hora--
           obj.tiempo.minuto = 60
         }
-        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0 && obj.tiempo.milisegundo === 0) {
+        if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0) {
           obj.tiempo.minuto--
           obj.tiempo.segundo = 60
         }
-        if (obj.tiempo.milisegundo === 0 && obj.tiempo.segundo > 0) {
-          obj.tiempo.segundo--
-          obj.tiempo.milisegundo = 10
-        }
-        obj.tiempo.milisegundo--
-        this.convertirADosDigitos(obj.tiempo)
+        obj.tiempo.segundo--
       }
     },
     agregarALista (obj) {
       const MAX = 50
-      this.convertirAEntero(obj.tiempo)
       if ((!obj.tiempoActivo) && (!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
-        this.convertirADosDigitos(obj.tiempo)
         const clon = this.clonarObjeto(obj.tiempo)
         obj.listaDeTiemposTotal = []
         obj.listaDeTiempos.push(clon)
         this.reiniciarValores(obj)
         this.cancelarTiempo(obj)
-      } else {
-        this.convertirADosDigitos(obj.tiempo)
       }
     },
     cancelarTiempo (obj) {

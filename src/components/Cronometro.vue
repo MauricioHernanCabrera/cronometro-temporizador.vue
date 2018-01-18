@@ -30,9 +30,8 @@ export default {
       cronometro: {
         tiempo: {
           hora: 0,
-          minuto: '00',
-          segundo: '00',
-          milisegundo: 0
+          minuto: 0,
+          segundo: 0
         },
         listaDeTiempos: [],
         tiempoActivo: false,
@@ -49,25 +48,16 @@ export default {
   methods: {
     iniciarCronometro (obj) {
       obj.tiempoActivo = !obj.tiempoActivo
-      this.convertirAEntero(obj.tiempo)
-      this.convertirADosDigitos(obj.tiempo)
       if (obj.tiempoActivo) {
         obj.intervalo = setInterval(() => {
           this.incrementarTiempo(obj)
         }, 100)
       } else {
-        this.convertirAEntero(obj.tiempo)
-        this.convertirADosDigitos(obj.tiempo)
         clearInterval(obj.intervalo)
       }
     },
     incrementarTiempo (obj) {
-      this.convertirAEntero(obj.tiempo)
-      obj.tiempo.milisegundo++
-      if (obj.tiempo.milisegundo === 10) {
-        obj.tiempo.segundo++
-        obj.tiempo.milisegundo = 0
-      }
+      obj.tiempo.segundo++
       if (obj.tiempo.segundo === 60) {
         obj.tiempo.minuto++
         obj.tiempo.segundo = 0
@@ -76,17 +66,12 @@ export default {
         obj.tiempo.hora++
         obj.tiempo.minuto = 0
       }
-      this.convertirADosDigitos(obj.tiempo)
     },
     agregarALista (obj) {
       const MAX = 50
-      this.convertirAEntero(obj.tiempo)
       if ((!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
-        this.convertirADosDigitos(obj.tiempo)
         const clon = this.clonarObjeto(obj.tiempo)
         obj.listaDeTiempos.unshift(clon)
-      } else {
-        this.convertirADosDigitos(obj.tiempo)
       }
     },
     eliminarTiempo (indice, obj) {

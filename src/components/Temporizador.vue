@@ -66,7 +66,6 @@ export default {
   methods: {
     iniciarTemporizador (obj) {
       // Solucion al problema de celulares
-      console.log(obj.tiempo)
       this.agregarAudio(obj)
       // ---------------------------------
       obj.tiempoActivo = !obj.tiempoActivo
@@ -93,7 +92,10 @@ export default {
           obj.tiempo.segundo = 60
         }
         obj.tiempo.segundo--
-        document.title = `${obj.tiempo.hora}:${obj.tiempo.minuto}:${obj.tiempo.segundo} Cronometro/Temporizador`
+        document.title = ((obj.tiempo.hora <= 9) ? '0' + obj.tiempo.hora : obj.tiempo.hora) + ':' +
+                        ((obj.tiempo.minuto <= 9) ? '0' + obj.tiempo.minuto : obj.tiempo.minuto) + ':' +
+                        ((obj.tiempo.segundo <= 9) ? '0' + obj.tiempo.segundo : obj.tiempo.segundo) +
+                        ' Cronometro/Temporizador'
       }
     },
     activarModal (obj) {
@@ -101,12 +103,11 @@ export default {
     },
     agregarALista (obj) {
       const MAX = 50
-      if ((!obj.tiempoActivo) && obj.listaDeTiempos.length < MAX) {
+      if (obj.listaDeTiempos.length < MAX) {
         const clon = this.clonarObjeto(obj.nuevoTiempo)
         clon.hora = (clon.hora === '') ? 0 : parseInt(clon.hora)
         clon.minuto = (clon.minuto === '') ? 0 : parseInt(clon.minuto)
         clon.segundo = (clon.segundo === '') ? 0 : parseInt(clon.segundo)
-        console.log(clon)
         obj.listaDeTiempos.push(clon)
         this.inicializarTiempo(obj.nuevoTiempo, 2)
         this.cancelarModal(obj)
