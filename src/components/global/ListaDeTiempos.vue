@@ -3,7 +3,7 @@
     transition-group(name="list" tag="p" class="list-item")
       li.item(
         v-for="(t, indice) in lista",
-        :key="t"
+        :key="t.id"
       )
         .contenedor-btn-texto
           button.btn-agregar(

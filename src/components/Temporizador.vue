@@ -19,7 +19,7 @@
       @eliminar="eliminarTiempo"
     )
     audio(
-      :id="temporizador.audioNombre" 
+      :id="temporizador.nombre" 
       src="src/assets/alarma.mp3" 
       type="audio/mpeg"
       controls
@@ -33,11 +33,9 @@
  
 <script>
 import FuncionesCompartidas from './../mixins/funcionesCompartidas'
-import AppModalNuevoTiempo from './global/ModalNuevoTiempo.vue'
 import { mapState } from 'vuex'
 export default {
   mixins: [ FuncionesCompartidas ],
-  components: { AppModalNuevoTiempo },
   data () {
     return {
       temporizador: {
@@ -48,7 +46,7 @@ export default {
         },
         listaDeTiempos: [],
         tiempoActivo: false,
-        audioNombre: 'temporizador',
+        nombre: 'Temporizador',
         audioID: null,
         intervalo: null,
         agregarActivo: false,
@@ -60,8 +58,12 @@ export default {
       }
     }
   },
+  created () {
+    this.$store.commit('setOpcionAPP', 1)
+    this.cambiarTitulo(1, this.temporizador.nombre)
+  },
   computed: {
-    ...mapState(['opcionAPP'])
+    ...mapState(['opcionAPP', 'id'])
   },
   methods: {
     iniciarTemporizador (obj) {
@@ -69,17 +71,21 @@ export default {
       this.agregarAudio(obj)
       // ---------------------------------
       obj.tiempoActivo = !obj.tiempoActivo
-      if (obj.tiempoActivo) {
-        obj.intervalo = setInterval(() => {
-          this.reducirElTiempo(obj)
-        }, 1000)
+      if (!this.tiempoNulo(obj.tiempo)) {
+        if (obj.tiempoActivo) {
+          obj.intervalo = setInterval(() => {
+            this.reducirElTiempo(obj)
+          }, 1000)
+        } else {
+          this.cambiarTitulo(1, obj.nombre)
+          clearInterval(obj.intervalo)
+        }
       } else {
-        clearInterval(obj.intervalo)
+        obj.tiempoActivo = !obj.tiempoActivo
       }
     },
     reducirElTiempo (obj) {
       if (this.tiempoNulo(obj.tiempo)) {
-        document.title = `Cronometro/Temporizador`
         this.iniciarAudio(obj)
         this.reiniciarValores(obj)
       } else {
@@ -92,14 +98,8 @@ export default {
           obj.tiempo.segundo = 60
         }
         obj.tiempo.segundo--
-        document.title = ((obj.tiempo.hora <= 9) ? '0' + obj.tiempo.hora : obj.tiempo.hora) + ':' +
-                        ((obj.tiempo.minuto <= 9) ? '0' + obj.tiempo.minuto : obj.tiempo.minuto) + ':' +
-                        ((obj.tiempo.segundo <= 9) ? '0' + obj.tiempo.segundo : obj.tiempo.segundo) +
-                        ' Cronometro/Temporizador'
+        this.cambiarTitulo(2, obj.nombre, obj.tiempo)
       }
-    },
-    activarModal (obj) {
-      obj.agregarActivo = true
     },
     agregarALista (obj) {
       const MAX = 50
@@ -108,6 +108,7 @@ export default {
         clon.hora = (clon.hora === '') ? 0 : parseInt(clon.hora)
         clon.minuto = (clon.minuto === '') ? 0 : parseInt(clon.minuto)
         clon.segundo = (clon.segundo === '') ? 0 : parseInt(clon.segundo)
+        clon.id = this.generarId(this.id)
         obj.listaDeTiempos.push(clon)
         this.inicializarTiempo(obj.nuevoTiempo, 2)
         this.cancelarModal(obj)

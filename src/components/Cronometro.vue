@@ -2,7 +2,6 @@
   main
     app-tiempo.contenedor(
       :tiempo="cronometro.tiempo"
-      :activo="opcionAPP == 2"
     )
     app-botones.contenedor(
       :tiempoActivo="cronometro.tiempoActivo"
@@ -34,6 +33,7 @@ export default {
           segundo: 0
         },
         listaDeTiempos: [],
+        nombre: 'Cronometro',
         tiempoActivo: false,
         intervalo: null
       }
@@ -41,9 +41,10 @@ export default {
   },
   created () {
     this.$store.commit('setOpcionAPP', 2)
+    this.cambiarTitulo(1, this.cronometro.nombre)
   },
   computed: {
-    ...mapState(['opcionAPP'])
+    ...mapState(['opcionAPP', 'id'])
   },
   methods: {
     iniciarCronometro (obj) {
@@ -51,8 +52,9 @@ export default {
       if (obj.tiempoActivo) {
         obj.intervalo = setInterval(() => {
           this.incrementarTiempo(obj)
-        }, 100)
+        }, 1000)
       } else {
+        this.cambiarTitulo(1, obj.nombre)
         clearInterval(obj.intervalo)
       }
     },
@@ -66,11 +68,13 @@ export default {
         obj.tiempo.hora++
         obj.tiempo.minuto = 0
       }
+      this.cambiarTitulo(2, obj.nombre, obj.tiempo)
     },
     agregarALista (obj) {
       const MAX = 50
       if ((!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
         const clon = this.clonarObjeto(obj.tiempo)
+        clon.id = this.generarId(this.id)
         obj.listaDeTiempos.unshift(clon)
       }
     },

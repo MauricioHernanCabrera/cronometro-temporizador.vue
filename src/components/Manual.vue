@@ -2,7 +2,6 @@
   main
     app-tiempo.contenedor(
       :tiempo="manual.tiempo"
-      :activo="opcionAPP == 3"
     )
     app-botones.contenedor(
       :tiempoActivo="manual.tiempoActivo"
@@ -10,15 +9,10 @@
       :opts="opcionAPP"
       @reiniciar="inicializarValoresManual"
       @iniciar="iniciarManual"
-      @agregar="activarAgregarTiempo"
+      @agregar="activarModal"
     )
     app-iteraciones.contenedor(
       :obj="manual"
-    )
-    app-modal-nuevo-tiempo(
-      :obj="manual"
-      @cancelar="cancelarModal"
-      @agregar="agregarALista"
     )
     app-lista-de-tiempos.contenedor(
       :lista="manual.listaDeTiempos"
@@ -27,10 +21,15 @@
       @eliminar="eliminarTiempo"
     )
     audio(
-      :id="manual.audioNombre"
+      :id="manual.nombre"
       src="src/assets/alarma.mp3" 
       type="audio/mpeg" 
       controls
+    )
+    app-modal-nuevo-tiempo(
+      :obj="manual"
+      @cancelar="cancelarModal"
+      @agregar="agregarALista"
     )
 </template>
  
@@ -55,24 +54,33 @@ export default {
         tiempoActivo: false,
         intervalo: null,
         agregarActivo: false,
-        audioNombre: 'manual',
+        nombre: 'Manual',
         audioID: null,
-        iteraciones: 1
+        iteraciones: 1,
+        nuevoTiempo: {
+          hora: '',
+          minuto: '',
+          segundo: ''
+        }
       }
     }
   },
   created () {
     this.$store.commit('setOpcionAPP', 3)
+    this.cambiarTitulo(1, this.manual.nombre)
   },
   computed: {
-    ...mapState(['opcionAPP'])
+    ...mapState(['opcionAPP', 'id'])
   },
   methods: {
     inicializarValoresManual (obj) {
+      obj.agregarActivo = false
       obj.listaDeTiempos = []
       obj.listaDeTiemposTotal = []
-      this.inicializarTiempo(obj.tiempo)
+      this.inicializarTiempo(obj.tiempo, 1)
       obj.iteraciones = 1
+      obj.tiempoActivo = false
+      this.cambiarTitulo(1, obj.nombre)
       clearInterval(obj.intervalo)
     },
     iniciarManual (obj) {
@@ -82,22 +90,20 @@ export default {
       if (this.tiempoNulo(obj.tiempo) && obj.listaDeTiemposTotal.length !== 0) {
         obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
       }
-      if (obj.audioID === null) {
-        obj.audioID = document.getElementById(obj.audioNombre)
-        obj.audioID.play()
-        obj.audioID.pause()
-      }
-      // ----------------------------------
+      this.agregarAudio(obj)
+
       obj.tiempoActivo = !obj.tiempoActivo
       if (!this.tiempoNulo(obj.tiempo)) {
         if (obj.tiempoActivo) {
           obj.intervalo = setInterval(() => {
             this.reducirTiempoManual(obj)
-          }, 100)
+          }, 1000)
         } else {
+          this.cambiarTitulo(1, obj.nombre)
           clearInterval(obj.intervalo)
         }
       } else {
+        this.cambiarTitulo(1, obj.nombre)
         obj.tiempoActivo = !obj.tiempoActivo
       }
     },
@@ -112,12 +118,11 @@ export default {
     reducirTiempoManual (obj) {
       if (this.tiempoNulo(obj.tiempo)) {
         obj.listaDeTiemposTotal.shift()
+        this.iniciarAudio(obj)
         if (obj.listaDeTiemposTotal.length === 0) {
           obj.iteraciones--
-          this.iniciarAudio(obj)
           this.reiniciarValores(obj)
         } else {
-          this.iniciarAudio(obj)
           obj.tiempo = this.clonarObjeto(obj.listaDeTiemposTotal[0])
           if (obj.listaDeTiemposTotal.length % obj.listaDeTiempos.length === 0) {
             obj.iteraciones--
@@ -133,30 +138,31 @@ export default {
           obj.tiempo.segundo = 60
         }
         obj.tiempo.segundo--
+        this.cambiarTitulo(3, obj.nombre, obj.tiempo, obj.iteraciones)
       }
     },
     agregarALista (obj) {
       const MAX = 50
-      if ((!obj.tiempoActivo) && (!this.tiempoNulo(obj.tiempo)) && obj.listaDeTiempos.length < MAX) {
-        const clon = this.clonarObjeto(obj.tiempo)
-        obj.listaDeTiemposTotal = []
+      if (obj.listaDeTiempos.length < MAX) {
+        const clon = this.clonarObjeto(obj.nuevoTiempo)
+        clon.hora = (clon.hora === '') ? 0 : parseInt(clon.hora)
+        clon.minuto = (clon.minuto === '') ? 0 : parseInt(clon.minuto)
+        clon.segundo = (clon.segundo === '') ? 0 : parseInt(clon.segundo)
+        clon.id = this.generarId(this.id)
         obj.listaDeTiempos.push(clon)
-        this.reiniciarValores(obj)
-        this.cancelarTiempo(obj)
+        this.inicializarTiempo(obj.nuevoTiempo, 2)
+        this.cancelarModal(obj)
       }
     },
     cancelarTiempo (obj) {
       obj.agregarActivo = false
-      this.inicializarTiempo(obj.tiempo)
+      this.inicializarTiempo(obj.tiempo, 1)
     },
     eliminarTiempo (indice, obj) {
       obj.listaDeTiempos.splice(indice, 1)
       obj.listaDeTiemposTotal = []
       obj.intervalo = null
-      this.inicializarTiempo(obj.tiempo)
-    },
-    activarAgregarTiempo (obj) {
-      obj.agregarActivo = true
+      this.inicializarTiempo(obj.tiempo, 1)
     }
   }
 }

@@ -68,6 +68,7 @@ export default{
     border-radius: .5em;
     text-align: center;
     font-size: 1em;
+    z-index: 10;
     .titulo{
       font-size: 1.5em;
     }
