@@ -3,6 +3,7 @@ const funcionesCompartidas = {
     reiniciarValores (obj) {
       obj.tiempoActivo = false
       this.cambiarTitulo(1, obj.nombre)
+      this.inicializarTiempo(obj.tiempo, 1)
       clearInterval(obj.intervalo)
     },
     inicializarTiempo (tiempo, opts) {
