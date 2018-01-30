@@ -71,6 +71,7 @@ export default {
       this.agregarAudio(obj)
       // ---------------------------------
       obj.tiempoActivo = !obj.tiempoActivo
+      this.notifyMe()
       if (!this.tiempoNulo(obj.tiempo)) {
         if (obj.tiempoActivo) {
           obj.intervalo = setInterval(() => {
@@ -96,6 +97,7 @@ export default {
         if (obj.tiempo.segundo === 0 && obj.tiempo.minuto > 0) {
           obj.tiempo.minuto--
           obj.tiempo.segundo = 60
+          this.notifyMe()
         }
         obj.tiempo.segundo--
         this.cambiarTitulo(2, obj.nombre, obj.tiempo)

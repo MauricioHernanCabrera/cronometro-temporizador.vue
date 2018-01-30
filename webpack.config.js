@@ -12,7 +12,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
+        <!-- loader: 'eslint-loader', -->
         enforce: 'pre',
         include: [path.resolve(__dirname, './src')] 
       },

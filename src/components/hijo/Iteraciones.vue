@@ -1,6 +1,6 @@
 <template lang="pug">
   .contenedor-iteraciones
-    span.texto ITERACIONES:
+    span.texto REPETICIONES:
     input.iteraciones(
       type="number" 
       v-model="obj.iteraciones"

@@ -16,3 +16,5 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+[Web en funcionamiento](https://cronometro-temporizadorvue-ifxivypcbh.now.sh/).

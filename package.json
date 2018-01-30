@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bulma": "^0.6.1",
+    "push.js": "^1.0.5",
     "serve": "^6.4.8",
     "vue": "^2.4.4",
     "vue-router": "^3.0.1",
